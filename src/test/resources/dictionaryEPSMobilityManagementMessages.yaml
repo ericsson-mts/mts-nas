@@ -1,0 +1,193 @@
+messages:
+  - name: "Attach request"
+    informationElements:
+      - name: "EPS attach type"
+        type: "EPS attach type"
+        presence: M
+        format: V
+        length:
+          length: 4
+      - name: "NAS key set identifier"
+        type: "NAS key set identifier"
+        presence: M
+        format: V
+        length:
+          length: 4
+      - name: "EPS mobile identity"
+        type: "EPS mobile identity"
+        presence: M
+        format: LV
+        length:
+          lb: 5
+          ub: 12
+      - name: "UE network capability"
+        type: "UE network capability"
+        presence: M
+        format: LV
+        length:
+          lb: 3
+          ub: 14
+      - name: "ESM message container"
+        type: "ESM message container"
+        presence: M
+        format: LVE
+        length:
+          lb: 5
+          ub: -1
+      - iei: 19
+        name: "Old P-TMSI signature"
+        type: "P-TMSI signature"
+        presence: O
+        format: TV
+        length:
+          length: 4
+      - iei: 50
+        name: "Additional GUTI"
+        type: "EPS mobile identity"
+        presence: O
+        format: TLV
+        length:
+          length: 13
+      - iei: 52
+        name: "Last visited registered TAI"
+        type: "Tracking area identity"
+        presence: O
+        format: TV
+        length:
+          length: 6
+      - iei: 5C
+        name: "DRX parameter"
+        type: "DRX parameter"
+        presence: O
+        format: TV
+        length:
+          length: 3
+      - iei: 31
+        name: "MS network capability"
+        type: "MS network capability"
+        presence: O
+        format: TLV
+        length:
+          lb: 4
+          ub: 10
+      - iei: 13
+        name: "Old location area identification"
+        type: "Location area identification"
+        presence: O
+        format: TV
+        length:
+          length: 6
+      - iei: 9-
+        name: "TMSI status"
+        type: "TMSI status"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: 11
+        name: "Mobile station classmark 2"
+        type: "Mobile station classmark 2"
+        presence: O
+        format: TLV
+        length:
+          length: 5
+      - iei: 20
+        name: "Mobile station classmark 3"
+        type: "Mobile station classmark 3"
+        presence: O
+        format: TLV
+        length:
+          lb: 2
+          ub: 34
+      - iei: 40
+        name: "Supported Codecs"
+        type: "Supported Codec List"
+        presence: O
+        format: TLV
+        length:
+          lb: 5
+          ub: -1
+      - iei: F-
+        name: "Additional update type"
+        type: "Additional update type"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: 5D
+        name: "Voice domain preference and UE's usage setting"
+        type: "Voice domain preference and UE's usage setting"
+        presence: O
+        format: TLV
+        length:
+          length: 3
+      - iei: D-
+        name: "Device properties"
+        type: "Device properties"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: E-
+        name: "Old GUTI type"
+        type: "GUTI type"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: C-
+        name: "MS network feature support"
+        type: "MS network feature support"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: 10
+        name: "TMSI based NRI container"
+        type: "Network resource identifier container"
+        presence: O
+        format: TLV
+        length:
+          length: 4
+      - iei: 6A
+        name: "T3324 value"
+        type: "GPRS timer 2"
+        presence: O
+        format: TLV
+        length:
+          length: 3
+      - iei: 5E
+        name: "T3412 extended value"
+        type: "GPRS timer 3"
+        presence: O
+        format: TLV
+        length:
+          length: 3
+      - iei: 6E
+        name: "Extended DRX parameters"
+        type: "Extended DRX parameters"
+        presence: O
+        format: TLV
+        length:
+          length: 3
+      - iei: 6F
+        name: "UE additional security capability"
+        type: "UE additional security capability"
+        presence: O
+        format: TLV
+        length:
+          length: 6
+      - iei: 6D
+        name: "UE status"
+        type: "UE status"
+        presence: O
+        format: TLV
+        length:
+          length: 3
+      - iei: 17
+        name: "Additional information requested"
+        type: "Additional information requested"
+        presence: O
+        format: TV
+        length:
+          length: 2

@@ -1,0 +1,69 @@
+messages:
+  - name: "PDN connectivity request" # 8.3.20
+    informationElements:
+      - name: "Request type"
+        type: "Request type"
+        presence: M
+        format: V
+        length:
+          length: 4
+      - name: "PDN type"
+        type: "PDN type"
+        presence: M
+        format: V
+        length:
+          length: 4
+      - iei: D-
+        name: "ESM information transfer flag"
+        type: "ESM information transfer flag"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: 28
+        name: "Access point name"
+        type: "Access point name"
+        presence: O
+        format: TLV
+        length:
+          lb: 3
+          ub: 102
+      - iei: 27
+        name: "Protocol configuration options"
+        type: "Protocol configuration options"
+        presence: O
+        format: TLV
+        length:
+          lb: 3
+          ub: 253
+      - iei: C-
+        name: "Device properties"
+        type: "Device properties"
+        presence: O
+        format: TV
+        length:
+          length: 1
+      - iei: 33
+        name: "NBIFOM container"
+        type: "NBIFOM container"
+        presence: O
+        format: TLV
+        length:
+          lb: 3
+          ub: 257
+      - iei: 66
+        name: "Header compression configuration"
+        type: "Header compression configuration"
+        presence: O
+        format: TLV
+        length:
+          lb: 5
+          ub: 257
+      - iei: 7B
+        name: "Extended protocol configuration options"
+        type: "Extended protocol configuration options"
+        presence: O
+        format: TLVE
+        length:
+          lb: 4
+          ub: 65538

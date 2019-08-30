@@ -1,0 +1,611 @@
+elements:
+  # - name : "Location area Identification" # 9.9.2.2
+  #   fields :
+  - name: "DRX parameter" # 9.9.3.8
+    ieiLength: 8
+    pdu:
+      - name: "SPLIT PG CYCLE CODE"
+        length: 8
+      - name: "CN Specific DRX cycle length coefficient and DRX value for S1 mode"
+        length: 4
+        namedValue:
+          0: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          1: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          2: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          3: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          4: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          5: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          6: "CN Specific DRX cycle length coefficient 6 and T = 32"
+          7: "CN Specific DRX cycle length coefficient 7 and T = 64"
+          8: "CN Specific DRX cycle length coefficient 8 and T = 128"
+          9: "CN Specific DRX cycle length coefficient 9 and T = 256"
+          10: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          11: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          12: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          13: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          14: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+          15: "For Iu mode, CN Specific DRX cycle length coefficient not specified by the MS, ie. the system information value 'CN domain specific DRX cycle length' is used . For S1 mode, DRX value not specified by the MS."
+      - name: "SPLIT on CCCH"
+        length: 1
+        namedValue:
+          0: "Split pg cycle on CCCH is not supported by the mobile station"
+          1: "Split pg cycle on CCCH is supported by the mobile station"
+      - name: "non-DRX timer"
+        length: 3
+        namedValue:
+          0: "no non-DRX mode after transfer state"
+          1: "max. 1 sec non-DRX mode after transfer state"
+          2: "max. 2 sec non-DRX mode after transfer state"
+          3: "max. 4 sec non-DRX mode after transfer state"
+          4: "max. 8 sec non-DRX mode after transfer state"
+          5: "max. 16 sec non-DRX mode after transfer state"
+          6: "max. 32 sec non-DRX mode after transfer state"
+          7: "max. 64 sec non-DRX mode after transfer state"
+  - name: "EPS attach type" # 9.9.3.11
+    ieiLength: 4
+    pdu:
+      - name: "EPS attach type value"
+        length: 3
+        namedValue:
+          1: "EPS attach"
+          3: "EPS attach"
+          4: "EPS attach"
+          5: "EPS attach"
+          2: "combined EPS/IMSI attach"
+          6: "EPS emergency attach"
+          7: "reserved"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+  - name: "EPS mobile identity" # 9.9.3.12
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of EPS mobile identity contents"
+      length: 8
+    pdu:
+      - "@type": "CHOICE"
+        name: "Type of identity"
+        field:
+          name: "Type of identity"
+          length: 3
+          namedValue:
+            1: "IMSI"
+            3: "IMEI"
+            6: "GUTI"
+        pdus:
+          - keys:
+              - 6
+            pdu:
+              - "@type": "SPARE"
+                name: "Spare"
+                length: 4
+                value: 15
+              - name: "odd even indication"
+                length: 1
+                namedValue:
+                  0: "even number of identity digits and also when the GUTI is used"
+                  1: "odd number of identity digits"
+              - "@type": "DIGITS"
+                name: "MCC digits"
+          - keys:
+              - 1
+              - 3
+            pdu:
+              - name: "odd even indication"
+                length: 1
+                namedValue:
+                  0: "even number of identity digits and also when the GUTI is used"
+                  1: "odd number of identity digits"
+              - "@type": "DIGITS"
+                name: "IMSI"
+                length: 15
+  - name: "ESM message container" # 9.9.3.15
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of ESM message container contents"
+      length: 16
+    pdu:
+      - "@type": "MESSAGE_WRAPPER"
+        name: "ESM message container contents"
+        length: 0
+        namedValue:
+          0: "L3 message wrapper"
+  - name: "MS network capability" # 9.9.3.20
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of MS network capability contents"
+      length: 8
+    pdu:
+      - name: "GEA/1"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/1 not available"
+          1: "Not used. This value was allocated in earlier versions of the protocol."
+      - name: "SM capabilities via dedicated channels"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support mobile terminated point to point SMS via CS domain"
+          1: "Mobile station supports mobile terminated point to point SMS via CS domain"
+      - name: "SM capabilities via GPRS channels:"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support mobile terminated point to point SMS via PS domain"
+          1: "Mobile station supports mobile terminated point to point SMS via PS domain"
+      - name: "UCS2 support"
+        length: 1
+        namedValue:
+          0: "the ME has a preference for the default alphabet over UCS2"
+          1: "the ME has no preference between the use of the default alphabet and the use of UCS2"
+      - name: "SS Screening Indicator"
+        length: 2
+        namedValue:
+          0: "default value of phase 1"
+          1: "capability of handling of ellipsis notation and phase 2 error handling"
+          2: "capability of handling of ellipsis notation and phase 2 error handling"
+          3: "capability of handling of ellipsis notation and phase 2 error handling"
+      - name: "SoLSA Capability"
+        length: 1
+        namedValue:
+          0: "The ME does not support SoLSA"
+          1: "The ME supports SoLSA"
+      - name: "Revision level indicator"
+        length: 1
+        namedValue:
+          0: "used by a mobile station not supporting R99 or later versions of the protocol"
+          1: "used by a mobile station supporting R99 or later versions of the protocol"
+      - name: "PFC feature mode"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support BSS packet flow procedures"
+          1: "Mobile station does support BSS packet flow procedures"
+      - name: "GEA/2"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/2 not available"
+          1: "encryption algorithm GEA/2 available"
+      - name: "GEA/3"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/3 not available"
+          1: "encryption algorithm GEA/3 available"
+      - name: "GEA/4"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/4 not available"
+          1: "encryption algorithm GEA/4 available"
+      - name: "GEA/5"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/5 not available"
+          1: "encryption algorithm GEA/5 available"
+      - name: "GEA/6"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/6 not available"
+          1: "encryption algorithm GEA/6 available"
+      - name: "GEA/7"
+        length: 1
+        namedValue:
+          0: "encryption algorithm GEA/7 not available"
+          1: "encryption algorithm GEA/7 available"
+      - name: "LCS VA capability"
+        length: 1
+        namedValue:
+          0: "location request notification via PS domain not supported"
+          1: "location request notification via PS domain supported"
+      - name: "PS inter-RAT HO from GERAN to UTRAN Iu mode capability"
+        length: 1
+        namedValue:
+          0: "PS inter-RAT HO from GERAN to UTRAN Iu mode not supported"
+          1: "PS inter-RAT HO from GERAN to UTRAN Iu mode supported"
+      - name: "PS inter-RAT HO from GERAN to E-UTRAN S1 mode capability"
+        length: 1
+        namedValue:
+          0: "PS inter-RAT HO from GERAN to E-UTRAN S1 mode not supported"
+          1: "PS inter-RAT HO from GERAN to E-UTRAN S1 mode supported"
+      - name: "EMM Combined procedures capability:"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support EMM combined procedures"
+          1: "Mobile station supports EMM combined procedures"
+      - name: "ISR support"
+        length: 1
+        namedValue:
+          0: "The mobile station does not support ISR"
+          1: "The mobile station supports ISR"
+      - name: "SRVCC to GERAN/UTRAN capability"
+        length: 1
+        namedValue:
+          0: "SRVCC from UTRAN HSPA or E-UTRAN to GERAN/UTRAN not supported"
+          1: "SRVCC from UTRAN HSPA or E-UTRAN to GERAN/UTRAN supported"
+      - name: "EPC capability"
+        length: 1
+        namedValue:
+          0: "EPC not supported"
+          1: "EPC supported"
+      - name: "NF capability"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support the notification procedure"
+          1: "Mobile station supports the notification procedure"
+      - name: "GERAN network sharing capability"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support GERAN network sharing"
+          1: "Mobile station supports GERAN network sharing"
+      - name: "User plane integrity protection support"
+        length: 1
+        namedValue:
+          0: "The mobile station does not support user plane integrity protection"
+          1: "The mobile station supports user plane integrity protection"
+      - name: "GIA/4"
+        length: 1
+        namedValue:
+          0: "integrity algorithm GIA/4 not available"
+          1: "integrity algorithm GIA/4 available"
+      - name: "GIA/5"
+        length: 1
+        namedValue:
+          0: "integrity algorithm GIA/5 not available"
+          1: "integrity algorithm GIA/5 available"
+      - name: "GIA/6"
+        length: 1
+        namedValue:
+          0: "integrity algorithm GIA/6 not available"
+          1: "integrity algorithm GIA/6 available"
+      - name: "GIA/7"
+        length: 1
+        namedValue:
+          0: "integrity algorithm GIA/7 not available"
+          1: "integrity algorithm GIA/7 available"
+      - name: "ePCO IE indicator"
+        length: 1
+        namedValue:
+          0: "used by a mobile station not supporting extended protocol configuration options IE"
+          1: "used by a mobile station supporting extended protocol configuration options IE"
+      - name: "Restriction on use of enhanced coverage capability"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support restriction on use of enhanced coverage"
+          1: "Mobile station supports restriction on use of enhanced coverage"
+      - name: "Dual connectivity of E-UTRA with NR capability"
+        length: 1
+        namedValue:
+          0: "Mobile station does not support dual connectivity of E-UTRA with NR"
+          1: "Mobile station supports dual connectivity of E-UTRA with NR"
+      - "@type": "SPARE"
+        name: "Spare"
+  - name: "NAS key set identifier" # 9.9.3.21
+    ieiLength: 4
+    pdu:
+      - name: "NAS key set identifier"
+        length: 3
+        namedValue:
+          0: "0"
+          1: "1"
+          2: "2"
+          3: "3"
+          4: "4"
+          5: "5"
+          6: "6"
+          7: "no key is available/reserved"
+      - name: "TSC"
+        length: 1
+        namedValue:
+          0: "native security context (for KSIASME)"
+          1: "mapped security context (for KSISGSN)"
+  - name: "P-TMSI signature" # 9.9.3.26
+    ieiLength: 8
+    pdu:
+      - name: "P-TMSI signature value"
+        length: 3
+  - name: "Tracking area identity" # 9.9.3.32
+    ieiLength: 8
+    pdu:
+      - name: "MCC digit 2"
+        length: 4
+      - name: "MCC digit 1"
+        length: 4
+      - name: "MNC digit 3"
+        length: 4
+      - name: "MCC digit 3"
+        length: 4
+      - name: "MNC digit 2"
+        length: 4
+      - name: "MNC digit 1"
+        length: 4
+      - name: "TAC"
+        length: 16
+  - "@type": "VARIABLE LENGTH"
+    name: "UE network capability" # 9.9.3.34
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of MS network capability contents"
+      length: 8
+    pdu:
+      - name: "EEA7"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm EEA7 not supported"
+          1: "EPS encryption algorithm EEA7 supported"
+      - name: "EEA6"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm EEA6 not supported"
+          1: "EPS encryption algorithm EEA6 supported"
+      - name: "EEA5"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm EEA5 not supported"
+          1: "EPS encryption algorithm EEA5 supported"
+      - name: "EEA4"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm EEA4 not supported"
+          1: "EPS encryption algorithm EEA4 supported"
+      - name: "128-EEA3"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm 128-EEA3 not supported"
+          1: "EPS encryption algorithm 128-EEA3 supported"
+      - name: "128-EEA2"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm 128-EEA2 not supported"
+          1: "EPS encryption algorithm 128-EEA2 supported"
+      - name: "128-EEA1"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm 128-EEA1 not supported"
+          1: "EPS encryption algorithm 128-EEA1 supported"
+      - name: "EEA0"
+        length: 1
+        namedValue:
+          0: "EPS encryption algorithm EEA0 not supported"
+          1: "EPS encryption algorithm EEA0 supported"
+      - name: "EIA7"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm EIA7 not supported"
+          1: "EPS integrity algorithm EIA7 supported"
+      - name: "EIA6"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm EIA6 not supported"
+          1: "EPS integrity algorithm EIA6 supported"
+      - name: "EIA5"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm EIA5 not supported"
+          1: "EPS integrity algorithm EIA5 supported"
+      - name: "EIA4"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm EIA4 not supported"
+          1: "EPS integrity algorithm EIA4 supported"
+      - name: "128-EIA3"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm 128-EIA3 not supported"
+          1: "EPS integrity algorithm 128-EIA3 supported"
+      - name: "128-EIA2"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm 128-EIA2 not supported"
+          1: "EPS integrity algorithm 128-EIA2 supported"
+      - name: "128-EIA1"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm 128-EIA1 not supported"
+          1: "EPS integrity algorithm 128-EIA1 supported"
+      - name: "EIA0"
+        length: 1
+        namedValue:
+          0: "EPS integrity algorithm EIA0 not supported"
+          1: "EPS integrity algorithm EIA0 supported"
+      - name: "UEA7"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA7 not supported"
+          1: "UMTS encryption algorithm UEA7 supported"
+      - name: "UEA6"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA6 not supported"
+          1: "UMTS encryption algorithm UEA6 supported"
+      - name: "UEA5"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA5 not supported"
+          1: "UMTS encryption algorithm UEA5 supported"
+      - name: "UEA4"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA4 not supported"
+          1: "UMTS encryption algorithm UEA4 supported"
+      - name: "UEA3"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA3 not supported"
+          1: "UMTS encryption algorithm UEA3 supported"
+      - name: "UEA2"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA2 not supported"
+          1: "UMTS encryption algorithm UEA2 supported"
+      - name: "UEA1"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA1 not supported"
+          1: "UMTS encryption algorithm UEA1 supported"
+      - name: "UEA0"
+        length: 1
+        namedValue:
+          0: "UMTS encryption algorithm UEA0 not supported"
+          1: "UMTS encryption algorithm UEA0 supported"
+      - name: "UIA7"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA7 not supported"
+          1: "UMTS integrity algorithm UIA7 supported"
+      - name: "UIA6"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA6 not supported"
+          1: "UMTS integrity algorithm UIA6 supported"
+      - name: "UIA5"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA5 not supported"
+          1: "UMTS integrity algorithm UIA5 supported"
+      - name: "UIA4"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA4 not supported"
+          1: "UMTS integrity algorithm UIA4 supported"
+      - name: "UIA3"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA3 not supported"
+          1: "UMTS integrity algorithm UIA3 supported"
+      - name: "UIA2"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA2 not supported"
+          1: "UMTS integrity algorithm UIA2 supported"
+      - name: "UIA1"
+        length: 1
+        namedValue:
+          0: "UMTS integrity algorithm UIA1 not supported"
+          1: "UMTS integrity algorithm UIA1 supported"
+      - name: "USC2"
+        length: 1
+      - name: "ProSe-dd"
+        length: 1
+        namedValue:
+          0: "ProSe direct discovery not supported"
+          1: "ProSe direct discovery supported"
+      - name: "ProSe"
+        length: 1
+        namedValue:
+          0: "ProSe not supported"
+          1: "ProSe supported"
+      - name: "H.245-ASH"
+        length: 1
+        namedValue:
+          0: "H.245 after SRVCC handover capability not supported"
+          1: "H.245 after SRVCC handover capability supported"
+      - name: "ACC-CSFB"
+        length: 1
+        namedValue:
+          0: "eNodeB-based access class control for CSFB not supported"
+          1: "eNodeB-based access class control for CSFB supported"
+      - name: "LPP"
+        length: 1
+        namedValue:
+          0: "LPP not supported"
+          1: "LPP supported"
+      - name: "LCS"
+        length: 1
+        namedValue:
+          0: "LCS notification mechanisms not supported"
+          1: "LCS notification mechanisms supported"
+      - name: "1xSRVCC"
+        length: 1
+        namedValue:
+          0: "SRVCC from E-UTRAN to cdma2000® 1x CS not supported"
+          1: "SRVCC from E-UTRAN to cdma2000® 1x CS supported"
+      - name: "NF"
+        length: 1
+        namedValue:
+          0: "notification procedure not supported"
+          1: "notification procedure supported"
+      - name: "ePCO"
+        length: 1
+        namedValue:
+          0: "Extended protocol configuration options IE not supported"
+          1: "Extended protocol configuration options IE supported"
+      - name: "HC-CP CIoT"
+        length: 1
+        namedValue:
+          0: "Header compression for control plane CIoT EPS optimization not supported"
+          1: "Header compression for control plane CIoT EPS optimization supported"
+      - name: "ERw/oPDN"
+        length: 1
+        namedValue:
+          0: "EMM-REGISTERED without PDN connection not supported"
+          1: "EMM-REGISTERED without PDN connection supported"
+      - name: "S1-U data"
+        length: 1
+        namedValue:
+          0: "S1-U data transfer not supported"
+          1: "S1-U data transfer supported"
+      - name: "UP CIoT"
+        length: 1
+        namedValue:
+          0: "User plane CIoT EPS optimization not supported"
+          1: "User plane CIoT EPS optimization supported"
+      - name: "CP CIoT"
+        length: 1
+        namedValue:
+          0: "Control plane CIoT EPS optimization not supported"
+          1: "Control plane CIoT EPS optimization supported"
+      - name: "ProSe-relay"
+        length: 1
+        namedValue:
+          0: "Acting as a ProSe UE-to-network relay not supported"
+          1: "Acting as a ProSe UE-to-network relay supported"
+      - name: "ProSe-dc"
+        length: 1
+        namedValue:
+          0: "ProSe direct communication not supported"
+          1: "ProSe direct communication supported"
+      - name: "15bearers"
+        length: 1
+        namedValue:
+          0: "Signalling for a maximum number of 15 EPS bearer contexts not supported"
+          1: "Signalling for a maximum number of 15 EPS bearer contexts supported"
+      - name: "SGC"
+        length: 1
+        namedValue:
+          0: "service gap control not supported"
+          1: "service gap control supported"
+      - name: "N1mode"
+        length: 1
+        namedValue:
+          0: "N1 mode not supported"
+          1: "N1 mode supported"
+      - name: "DCNR"
+        length: 1
+        namedValue:
+          0: "dual connectivity with NR not supported"
+          1: "dual connectivity with NR supported"
+      - name: "CP backoff"
+        length: 1
+        namedValue:
+          0: "back-off timer for transport of user data via the control plane not supported"
+          1: "back-off timer for transport of user data via the control plane supported"
+      - name: "RestrictEC"
+        length: 1
+        namedValue:
+          0: "Restriction on use of enhanced coverage not supported"
+          1: "Restriction on use of enhanced coverage supported"
+      - name: "V2X PC5"
+        length: 1
+        namedValue:
+          0: "V2X communication over PC5 not supported"
+          1: "V2X communication over PC5 supported"
+      - name: "multipleDRB"
+        length: 1
+        namedValue:
+          0: "Multiple DRB not supported"
+          1: "Multiple DRB supported"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 40
+        value: 0

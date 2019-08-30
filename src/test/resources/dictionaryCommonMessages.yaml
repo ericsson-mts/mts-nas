@@ -1,0 +1,20 @@
+messages:
+  - "@type": "L3 message wrapper"
+    name: "L3 message wrapper"
+    informationElements:
+      - name: "Protocol discriminator"
+        type: "Protocol discriminator"
+        presence: M
+        format: V
+      - name: "Security header type"
+        type: "Security header type"
+        presence: M
+        format: V
+      - name: "Procedure transaction identity"
+        type: "Procedure transaction identity"
+        presence: O
+        format: V
+      - name: "Message type"
+        type: "Message type"
+        presence: M
+        format: V
