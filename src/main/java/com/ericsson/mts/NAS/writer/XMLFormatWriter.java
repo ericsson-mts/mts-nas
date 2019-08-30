@@ -68,12 +68,10 @@ public class XMLFormatWriter implements FormatWriter {
         return newElement;
     }
 
-    @Override
     public void enterObject(String name) {
         createNewElement(name, false);
     }
 
-    @Override
     public void leaveObject(String name) {
         Node parent = currentNode.getParentNode();
         if (parent instanceof Element) {
@@ -83,12 +81,10 @@ public class XMLFormatWriter implements FormatWriter {
         }
     }
 
-    @Override
     public void enterArray(String name) {
         createNewElement(name, false);
     }
 
-    @Override
     public void leaveArray(String name) {
         Node parent = currentNode.getParentNode();
         if (parent instanceof Element) {
@@ -98,37 +94,30 @@ public class XMLFormatWriter implements FormatWriter {
         }
     }
 
-    @Override
     public void stringValue(String name, String value) {
         createNewElement(name, true).setTextContent(value);
     }
 
-    @Override
     public void booleanValue(String name, boolean value) {
         createNewElement(name, true).setTextContent(Boolean.toString(value));
     }
 
-    @Override
     public void intValue(String name, BigInteger value) {
         createNewElement(name, true).setTextContent(value.toString());
     }
 
-    @Override
     public void realValue(String name, BigDecimal value) {
         createNewElement(name, true).setTextContent(value.toString());
     }
 
-    @Override
     public void bytesValue(String name, byte[] value) {
-        createNewElement(name, true).setTextContent(FormatWriter.bytesToHex(value));
+        createNewElement(name, true).setTextContent(bytesToHex(value));
     }
 
-    @Override
     public void bitsValue(String name, String value) {
         createNewElement(name, true).setTextContent(value);
     }
 
-    @Override
     public void nullValue(String name) {
         createNewElement(name, true).setAttribute("isNull", "true");
     }
@@ -149,5 +138,13 @@ public class XMLFormatWriter implements FormatWriter {
         StringWriter writer = new StringWriter();
         transformer.transform(new DOMSource(document.getDocumentElement()), new StreamResult(writer));
         return writer.toString();
+    }
+
+    private String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 }

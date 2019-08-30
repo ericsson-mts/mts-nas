@@ -71,7 +71,7 @@ public class BitArray {
 
     public String getBinaryMessage() throws IOException {
         this.skipAlignedBits();
-        return FormatWriter.bytesToHex(outputStream.toByteArray());
+        return bytesToHex(outputStream.toByteArray());
     }
 
     public byte[] getBinaryArray() {
@@ -80,6 +80,14 @@ public class BitArray {
 
     public String getActualBinaryMessage() {
         //Use for debug
-        return FormatWriter.bytesToHex(outputStream.toByteArray()) + Integer.toString(currentByte, 16);
+        return bytesToHex(outputStream.toByteArray()) + Integer.toString(currentByte, 16);
+    }
+
+    private String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 }

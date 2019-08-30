@@ -18,10 +18,10 @@ public class Message extends AbstractMessage {
     public void decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException {
         logger.trace("Enter message {}", name);
         formatWriter.enterObject(name);
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength4 = new HashMap<>();
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength4Minus = new HashMap<>();
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength8 = new HashMap<>();
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength16 = new HashMap<>();
+        Map<Integer, InformationElementContainer> optionnalInformationElementsLength4 = new HashMap<Integer, InformationElementContainer>();
+        Map<Integer, InformationElementContainer> optionnalInformationElementsLength4Minus = new HashMap<Integer, InformationElementContainer>();
+        Map<Integer, InformationElementContainer> optionnalInformationElementsLength8 = new HashMap<Integer, InformationElementContainer>();
+        Map<Integer, InformationElementContainer> optionnalInformationElementsLength16 = new HashMap<Integer, InformationElementContainer>();
 
         for (InformationElementsContainer informationElementsContainer : informationElements) {
             AbstractInformationElement informationElement = mainRegistry.getInformationElement(informationElementsContainer.getType());
