@@ -1,0 +1,67 @@
+elements:
+  - name: "Access point name" # 9.9.4.1
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of access point name contents"
+      length: 8
+    pdu:
+      - "@type": "DIGITS"
+        name: "Access point name value"
+  - name: "ESM information transfer flag" # 9.9.4.5
+    ieiLength: 4
+    pdu:
+      - name: "EIT value"
+        length: 1
+        namedValue:
+          0: "security protected ESM information transfer not required"
+          1: "security protected ESM information transfer required"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 3
+        value: 0
+  - name: "Request type" # 9.9.4.14
+    ieiLength: 4
+    pdu:
+      - name: "Request type value"
+        length: 3
+        namedValue:
+          1: "initial request"
+          2: "Handover"
+          3: "initial request"
+          4: "emergency"
+          5: "handover of emergency bearer services"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+  - name: "PDN type" # 9.9.4.10
+    ieiLength: 4
+    pdu:
+      - name: "PDN type value"
+        length: 3
+        namedValue:
+          1: "IPv4"
+          2: "IPv6"
+          3: "IPv4v6"
+          4: "IPv6"
+          5: "non IP"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+  - name : "Protocol configuration options" #9.9.4.11
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of protocol config. options contents"
+      length: 8
+    pdu:
+      - name: "Configuration protocol"
+        length: 3
+        namedValue:
+          0: "PPP for use with IP PDP type or IP PDN type"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 4
+        value: 0

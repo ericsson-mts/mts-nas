@@ -1,0 +1,140 @@
+elements:
+  - name: "Protocol discriminator"
+    pdu:
+      - "@type": "EXTENSION"
+        name: "Protocol discriminator"
+        field:
+          name: "Protocol discriminator"
+          length: 4
+          namedValue:
+            0: "group call control"
+            1: "broadcast call control"
+            2: "EPS session management messages"
+            3: "call control; call related SS messages"
+            4: "GPRS transparent Transport Protocol (GTTP)"
+            5: "mobility management messages"
+            6: "radio resources management messages"
+            7: "EPS mobility management messages"
+            8: "GPRS mobility management messages"
+            9: "SMS messages"
+            10: "GPRS session management messages"
+            11: "non call related SS messages"
+            12: "Location services"
+            14: "extension of the PD to one octect length"
+            15: "used by tests procedures"
+        keys:
+          - 14
+        additionnalField:
+          name: "Extended protocol discriminator"
+          length: 8
+          namedValue:
+            2: "5GS session management messages"
+            7: "5GS mobility management messages"
+  - name: "Security header type"
+    pdu:
+      - name: "Security header type"
+        length: 4
+        namedValue:
+          0: "Plain NAS message, not security protected"
+          1: "Security protected NAS message: Integrity protected"
+          2: "Security protected NAS message: Integrity protected and ciphered"
+          3: "Security protected NAS message: Integrity protected with new EPS security context"
+          4: "Security protected NAS message: Integrity protected and ciphered with new EPS security context"
+          5: "Security protected NAS message: Integrity protected and partially ciphered NAS message"
+          12: "Non-standard L3 message: Security header for the SERVICE REQUEST message"
+          13: "Non-standard L3 message: Security header for the SERVICE REQUEST message"
+          14: "Non-standard L3 message: Security header for the SERVICE REQUEST message"
+          15: "Non-standard L3 message: Security header for the SERVICE REQUEST message"
+  - name: "Procedure transaction identity"
+    pdu:
+      - name: "Procedure transaction identity"
+        length: 8
+  - name: "Message type"
+    pdu:
+      - "@type": "MESSAGE_WRAPPER"
+        name: "Message type"
+        length: 8
+        namedValue:
+          65: "Attach request"
+          66: "Attach accept"
+          67: "Attach complete"
+          68: "Attach reject"
+          69: "Detach request"
+          70: "Detach accept"
+          72: "Tracking area update request"
+          73: "Tracking area update accept"
+          74: "Tracking area update complete"
+          75: "Tracking area update reject"
+          76: "Extended service request"
+          77: "Control plane service request"
+          78: "Service reject"
+          79: "Service accept"
+          80: "GUTI reallocation command"
+          81: "GUTI reallocation complete"
+          82: "Authentication request"
+          83: "Authentication response"
+          84: "Authentication reject"
+          92: "Authentication failure"
+          85: "Identity request"
+          86: "Identity response"
+          93: "Security mode command"
+          94: "Security mode complete"
+          95: "Security mode reject"
+          96: "EMM status"
+          97: "EMM information"
+          98: "Downlink NAS transport"
+          99: "Uplink NAS transport"
+          100: "CS Service notification"
+          104: "Downlink generic NAS transport"
+          105: "Uplink generic NAS transport"
+          193: "Activate default EPS bearer context request"
+          194: "Activate default EPS bearer context accept"
+          195: "Activate default EPS bearer context reject"
+          197: "Activate dedicated EPS bearer context request"
+          198: "Activate dedicated EPS bearer context accept"
+          199: "Activate dedicated EPS bearer context reject"
+          201: "Modify EPS bearer context request"
+          202: "Modify EPS bearer context accept"
+          203: "Modify EPS bearer context reject"
+          205: "Deactivate EPS bearer context request"
+          206: "Deactivate EPS bearer context accept"
+          208: "PDN connectivity request"
+          209: "PDN connectivity reject"
+          210: "Bearer resource allocation request"
+          211: "Bearer resource allocation reject"
+          212: "Bearer resource modification request"
+          213: "Bearer resource modification reject"
+          215: "ESM information request"
+          216: "ESM information response"
+          217: "Notification"
+          220: "ESM dummy message"
+          232: "ESM status"
+          233: "Remote UE report"
+          234: "Remote UE report response"
+          235: "ESM data transport"
+  - name: "Device properties"
+    ieiLength: 4
+    pdu:
+      - name: "Low priority"
+        length: 1
+        namedValue:
+          0: "MS is not configured for NAS signalling low priority"
+          1: "MS is configured for NAS signalling low priority"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+#  - name: "NBIFOM container" #9.9.4.19
+#    ieiLength: 8
+#    lengthField:
+#      "@type": "LENGTH"
+#      name: "Length of access point name contents"
+#      length: 8
