@@ -9,11 +9,10 @@ import com.ericsson.mts.NAS.writer.FormatWriter;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 
 import static com.ericsson.mts.NAS.writer.XMLFormatWriter.bytesToHex;
 
-public class HexadecimalField extends AbstractTranslatorField {
+public class BinaryField extends AbstractTranslatorField {
 
     @Override
     public int decode(Registry mainRegistry,  BitInputStream s, FormatWriter formatWriter) throws IOException, DecodingException {
@@ -21,12 +20,13 @@ public class HexadecimalField extends AbstractTranslatorField {
         byte[] buffer;
         int len;
         if(null == length){
-            len = s.bigReadBits(8).intValueExact();
+            len = s.bigReadBits(8).intValueExact() *8;
+            formatWriter.intValue("Length", BigInteger.valueOf(len/8));
         } else {
             len = this.length;
         }
-        formatWriter.intValue("Length", BigInteger.valueOf(len));
 
+//        formatWriter.intValue("Length", BigInteger.valueOf(len/8));
         logger.trace("reading {} bits", len);
         buffer = new byte[len / 8 + ((len % 8) > 0 ? 1 : 0)];
         int offset = 7;
@@ -49,6 +49,17 @@ public class HexadecimalField extends AbstractTranslatorField {
 
     @Override
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
-        return "";
+
+        StringBuilder res = new StringBuilder();
+        if(null == length){
+            if(null != r.exist("Length")){
+                String len = Integer.toHexString(r.intValue("Length").intValue());
+                if(len.length() == 1){
+                    res.append("0");
+                }
+                res.append(len);
+            }
+        }
+        return res.append(r.bytesValue(name)).toString();
     }
 }

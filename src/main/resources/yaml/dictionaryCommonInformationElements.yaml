@@ -26,7 +26,7 @@ elements:
           - 14
         additionnalField:
           name: "Extended protocol discriminator"
-          length: 4
+          length: 8
           namedValue:
             2: "5GS session management messages"
             7: "5GS mobility management messages"
@@ -112,3 +112,29 @@ elements:
           233: "Remote UE report"
           234: "Remote UE report response"
           235: "ESM data transport"
+  - name: "Device properties"
+    ieiLength: 4
+    pdu:
+      - name: "Low priority"
+        length: 1
+        namedValue:
+          0: "MS is not configured for NAS signalling low priority"
+          1: "MS is configured for NAS signalling low priority"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 1
+        value: 0
+#  - name: "NBIFOM container" #9.9.4.19
+#    ieiLength: 8
+#    lengthField:
+#      "@type": "LENGTH"
+#      name: "Length of access point name contents"
+#      length: 8

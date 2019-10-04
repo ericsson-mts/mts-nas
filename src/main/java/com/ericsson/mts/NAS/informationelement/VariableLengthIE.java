@@ -5,8 +5,7 @@ import com.ericsson.mts.NAS.exceptions.DecodingException;
 import com.ericsson.mts.NAS.exceptions.DictionaryException;
 import com.ericsson.mts.NAS.exceptions.NotHandledException;
 import com.ericsson.mts.NAS.informationelement.field.AbstractField;
-import com.ericsson.mts.NAS.informationelement.field.AbstractTranslatorField;
-import com.ericsson.mts.NAS.informationelement.field.translator.LengthField;
+import com.ericsson.mts.NAS.reader.XMLFormatReader;
 import com.ericsson.mts.NAS.registry.Registry;
 import com.ericsson.mts.NAS.writer.FormatWriter;
 
@@ -21,8 +20,7 @@ public class VariableLengthIE extends AbstractInformationElement {
         formatWriter.enterObject(name);
         int result = -1;
         for (AbstractField abstractField : pdu) {
-            usedLength += ((AbstractTranslatorField) abstractField).getLength();
-            if (usedLength <= length) {
+            if (bitInputStream.available() > 0) {
                 result = abstractField.decode(mainRegistry, bitInputStream, formatWriter);
             } else {
                 break;
@@ -30,5 +28,10 @@ public class VariableLengthIE extends AbstractInformationElement {
         }
         formatWriter.leaveObject(name);
         return result;
+    }
+
+    @Override
+    public void encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString,StringBuilder hexaString) {
+
     }
 }

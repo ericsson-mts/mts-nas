@@ -5,7 +5,7 @@ import com.ericsson.mts.NAS.exceptions.DecodingException;
 import com.ericsson.mts.NAS.exceptions.DictionaryException;
 import com.ericsson.mts.NAS.exceptions.NotHandledException;
 import com.ericsson.mts.NAS.informationelement.field.AbstractField;
-import com.ericsson.mts.NAS.informationelement.field.translator.LengthField;
+import com.ericsson.mts.NAS.reader.XMLFormatReader;
 import com.ericsson.mts.NAS.registry.Registry;
 import com.ericsson.mts.NAS.writer.FormatWriter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -23,51 +23,9 @@ import java.util.List;
 })
 public abstract class AbstractInformationElement {
     protected Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
-    protected String name;
-    protected int ieiLength;
-    protected LengthField lengthField;
-    protected int length;
-    protected List<AbstractField> pdu;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getIeiLength() {
-        return ieiLength;
-    }
-
-    public void setIeiLength(int ieiLength) {
-        this.ieiLength = ieiLength;
-    }
-
-    public List<AbstractField> getPdu() {
-        return pdu;
-    }
-
-    public void setPdu(List<AbstractField> pdu) {
-        this.pdu = pdu;
-    }
-
-    public LengthField getLengthField() {
-        return lengthField;
-    }
-
-    public void setLengthField(LengthField lengthField) {
-        this.lengthField = lengthField;
-    }
-
-    public int getLength() {
-        return length;
-    }
-
-    public void setLength(int length) {
-        this.length = length;
-    }
+    public String name;
+    public List<AbstractField> pdu;
 
     public abstract int decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException;
+    public abstract void encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString, StringBuilder hexaString);
 }

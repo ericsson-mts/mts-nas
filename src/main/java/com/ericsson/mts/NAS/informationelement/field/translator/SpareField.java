@@ -3,10 +3,12 @@ package com.ericsson.mts.NAS.informationelement.field.translator;
 import com.ericsson.mts.NAS.BitInputStream;
 import com.ericsson.mts.NAS.exceptions.DecodingException;
 import com.ericsson.mts.NAS.informationelement.field.AbstractField;
+import com.ericsson.mts.NAS.reader.XMLFormatReader;
 import com.ericsson.mts.NAS.registry.Registry;
 import com.ericsson.mts.NAS.writer.FormatWriter;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SpareField extends AbstractField {
     private int value;
@@ -40,5 +42,14 @@ public class SpareField extends AbstractField {
             throw new RuntimeException("TODO");
         }
         return 0;
+    }
+
+    @Override
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+
+        String res = Integer.toHexString(this.value);
+        logger.trace("Spare value : {} to hex value 0x{}", this.value, res);
+        return String.format("%"+length+"s", Integer.toBinaryString(((Integer)value).byteValue() & 0xFF)).replace(' ', '0');
+
     }
 }

@@ -3,6 +3,7 @@ package com.ericsson.mts.NAS.informationelement.field.translator;
 import com.ericsson.mts.NAS.BitInputStream;
 import com.ericsson.mts.NAS.exceptions.DecodingException;
 import com.ericsson.mts.NAS.informationelement.field.AbstractTranslatorField;
+import com.ericsson.mts.NAS.reader.XMLFormatReader;
 import com.ericsson.mts.NAS.registry.Registry;
 import com.ericsson.mts.NAS.writer.FormatWriter;
 import com.ericsson.mts.NAS.writer.XMLFormatWriter;
@@ -22,5 +23,10 @@ public class DigitsField extends AbstractTranslatorField {
         }
         logger.trace("Result : " + string);
         return 0;
+    }
+
+    @Override
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+        return "";
     }
 }

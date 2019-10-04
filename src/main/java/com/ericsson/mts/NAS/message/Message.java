@@ -5,103 +5,136 @@ import com.ericsson.mts.NAS.BitInputStream;
 import com.ericsson.mts.NAS.exceptions.DecodingException;
 import com.ericsson.mts.NAS.exceptions.DictionaryException;
 import com.ericsson.mts.NAS.exceptions.NotHandledException;
-import com.ericsson.mts.NAS.informationelement.AbstractInformationElement;
-import com.ericsson.mts.NAS.informationelement.field.translator.LengthField;
+import com.ericsson.mts.NAS.reader.XMLFormatReader;
 import com.ericsson.mts.NAS.registry.Registry;
 import com.ericsson.mts.NAS.writer.FormatWriter;
 
+import javax.xml.bind.DatatypeConverter;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.math.BigInteger;
+import java.util.Map;
+
+import static com.ericsson.mts.NAS.writer.XMLFormatWriter.bytesToHex;
 
 public class Message extends AbstractMessage {
 
-    public void decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException {
-        logger.trace("Enter message {}", name);
-        formatWriter.enterObject(name);
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength4 = new HashMap<Integer, InformationElementContainer>();
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength4Minus = new HashMap<Integer, InformationElementContainer>();
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength8 = new HashMap<Integer, InformationElementContainer>();
-        Map<Integer, InformationElementContainer> optionnalInformationElementsLength16 = new HashMap<Integer, InformationElementContainer>();
+    public void decode(Registry mainRegistry, BitInputStream s, FormatWriter w) throws IOException, DecodingException, DictionaryException, NotHandledException {
+        w.enterObject(this.name);
 
-        for (InformationElementsContainer informationElementsContainer : informationElements) {
-            AbstractInformationElement informationElement = mainRegistry.getInformationElement(informationElementsContainer.getType());
-            if(informationElement == null){
-                throw new DictionaryException("Can't find information element " + informationElementsContainer.getType());
-            }
-            if (informationElementsContainer.getPresence().equals(PresenceEnum.M)) {
-                logger.trace("Decode field {}", informationElementsContainer.getName());
-                if(informationElementsContainer.getFormat() == FormatEnum.TLVE ||
-                        informationElementsContainer.getFormat() == FormatEnum.TLV ||
-                        informationElementsContainer.getFormat() == FormatEnum.LVE ||
-                        informationElementsContainer.getFormat() == FormatEnum.LV){
-                    LengthField lengthField = informationElement.getLengthField();
-                    informationElement.setLength(lengthField.decode(mainRegistry, bitInputStream, formatWriter) * 8);
-                }
-                informationElement.decode(mainRegistry, bitInputStream, formatWriter);
-            } else if (informationElementsContainer.getPresence().equals(PresenceEnum.O)) {
-                if(informationElementsContainer.getFormat() != FormatEnum.T && informationElementsContainer.getFormat() != FormatEnum.TV && informationElementsContainer.getFormat() != FormatEnum.TLV && informationElementsContainer.getFormat() != FormatEnum.TLVE){
-                    throw new DictionaryException(informationElementsContainer.getName() + " need to be one of the following format (T, TV, TLV or TLV-E");
-                }
-
-                if (informationElement.getIeiLength() == 4) {
-                    if(informationElementsContainer.getIei().endsWith("-")){
-                        optionnalInformationElementsLength4Minus.put(Integer.valueOf(informationElementsContainer.getIei().replace("-",""), 16), new InformationElementContainer(informationElement, informationElementsContainer));
-                    } else {
-                        optionnalInformationElementsLength4.put(Integer.valueOf(informationElementsContainer.getIei(), 16), new InformationElementContainer(informationElement, informationElementsContainer));
-                    }
-                } else if (informationElement.getIeiLength() == 8) {
-                    optionnalInformationElementsLength8.put(Integer.valueOf(informationElementsContainer.getIei(), 16), new InformationElementContainer(informationElement, informationElementsContainer));
-                } else if (informationElement.getIeiLength() == 16) {
-                    optionnalInformationElementsLength16.put(Integer.valueOf(informationElementsContainer.getIei(), 16), new InformationElementContainer(informationElement, informationElementsContainer));
+        if(null != mandatory) {
+            for (InformationElementsContainer c : mandatory) {
+                if (null != mainRegistry.getInformationElement(c.type)) {
+                    w.enterObject(c.name());
+                    mainRegistry.getInformationElement(c.type).decode(mainRegistry, read(c, s,w), w);
+                    w.leaveObject(c.name());
                 } else {
-                    throw new DictionaryException("Unknown length for information element " + informationElement.getName());
+                    logger.error("Impossible de trouver l'élement {}", c.type);
                 }
-            } else {
-                throw new NotHandledException("TODO : handle presence " + informationElementsContainer.getPresence());
-            }
-        }
-        int iei;
-        while (bitInputStream.available() > 0) {
-            iei = bitInputStream.readBits(4);
-            if(optionnalInformationElementsLength4.containsKey(iei)){
-                InformationElementContainer informationElementContainer = optionnalInformationElementsLength4.get(iei);
-                if(informationElementContainer.getInformationElementsContainer().getFormat() == FormatEnum.TLVE || informationElementContainer.getInformationElementsContainer().getFormat() == FormatEnum.TLV){
-                    LengthField lengthField = informationElementContainer.getAbstractInformationElement().getLengthField();
-                    int length = lengthField.decode(mainRegistry, bitInputStream, formatWriter);
-
-                    informationElementContainer.getAbstractInformationElement().decode(mainRegistry, bitInputStream, formatWriter);
-                }
-            } else {
-
             }
         }
 
-        formatWriter.leaveObject(name);
+        while(s.available() > 0 && null != optional){
+            readOptionnal(mainRegistry, s, w);
+        }
+
+        w.leaveObject(this.name);
+
     }
 
-    private class InformationElementContainer{
-        private AbstractInformationElement abstractInformationElement;
-        private InformationElementsContainer informationElementsContainer;
+    @Override
+    public byte[] encode(Registry mainRegistry, XMLFormatReader r) {
 
-        public InformationElementContainer(AbstractInformationElement abstractInformationElement, InformationElementsContainer informationElementsContainer) {
-            this.abstractInformationElement = abstractInformationElement;
-            this.informationElementsContainer = informationElementsContainer;
+        StringBuilder binaryString = new StringBuilder();
+        StringBuilder hexaString = new StringBuilder();
+
+        if(null != mandatory) {
+            for (InformationElementsContainer c : mandatory) {
+                if (null != mainRegistry.getInformationElement(c.type)) {
+                    r.enterObject(c.name);
+                    if (null != r.exist("Length")) {
+                        String len = Integer.toHexString(r.intValue("Length").intValue());
+                        if (len.length() == 1) {
+                            hexaString.append("0");
+                        }
+                        hexaString.append(len);
+                    }
+                    mainRegistry.getInformationElement(c.type).encode(mainRegistry, r, binaryString, hexaString);
+                    r.leaveObject(c.name);
+                }
+            }
         }
 
-        public AbstractInformationElement getAbstractInformationElement() {
-            return abstractInformationElement;
+        if(null != optional){
+            for (Map.Entry<String, InformationElementsContainer> entry : optional.entrySet()){
+                String name = entry.getValue().name;
+                if(null != r.exist(name)){
+                    r.enterObject(name);
+                    hexaString.append(entry.getKey());
+                    if(null != r.exist("Length")){
+                        String len = Integer.toHexString(r.intValue("Length").intValue());
+                        if(len.length() == 1){
+                            hexaString.append("0");
+                        }
+                        hexaString.append(len);
+                    }
+                    mainRegistry.getInformationElement(entry.getValue().type).encode(mainRegistry,r,binaryString,hexaString);
+                    r.leaveObject(name);
+                }
+            }
         }
 
-        public void setAbstractInformationElement(AbstractInformationElement abstractInformationElement) {
-            this.abstractInformationElement = abstractInformationElement;
-        }
+        return DatatypeConverter.parseHexBinary(hexaString.toString());
+    }
 
-        public InformationElementsContainer getInformationElementsContainer() {
-            return informationElementsContainer;
+    private void readOptionnal(Registry mainRegistry, BitInputStream s, FormatWriter w) throws IOException, DecodingException, DictionaryException, NotHandledException {
+        String iei = Integer.toHexString(s.readBits(4)).toUpperCase();
+        if(optional.containsKey(iei)){
+            logger.trace("decode IEI : 0x{}",iei);
+            w.enterObject(optional.get(iei).name());
+            mainRegistry.getInformationElement(optional.get(iei).type).decode(mainRegistry, read(optional.get(iei), s,w), w);
+            w.leaveObject(optional.get(iei).name());
+        } else {
+            iei += Integer.toHexString(s.readBits(4)).toUpperCase();
+            if (optional.containsKey(iei)) {
+                logger.trace("decode IEI : 0x{}",iei);
+                w.enterObject(optional.get(iei).name());
+                w.stringValue("IEI", iei);
+                mainRegistry.getInformationElement(optional.get(iei).type).decode(mainRegistry, read(optional.get(iei), s,w), w);
+                w.leaveObject(optional.get(iei).name());
+            } else {
+                throw new RuntimeException("Unknown IEI " + iei);
+            }
         }
+    }
 
-        public void setInformationElementsContainer(InformationElementsContainer informationElementsContainer) {
-            this.informationElementsContainer = informationElementsContainer;
+    private BitInputStream read(InformationElementsContainer c, BitInputStream s, FormatWriter w) throws IOException {
+        byte[] buffer;
+        int len;
+        if (null != c.length && -1 != c.length) {
+            len = c.length;
+        } else if (null == c.length) {
+            len = s.bigReadBits(8).intValueExact() *8;
+            w.intValue("Length", BigInteger.valueOf(len/8));
+        } else {
+            return s;
         }
+        logger.trace("reading {} bits", len);
+        buffer = new byte[len / 8 + ((len % 8) > 0 ? 1 : 0)];
+        int offset = 7;
+        int index = 0;
+        while (len > 0) {
+            byte bitValue = (byte) s.readBit();
+
+            buffer[index] = (byte) (buffer[index] | (bitValue << offset));
+            offset--;
+            if (-1 == offset) {
+                index++;
+                offset = 7;
+            }
+            len--;
+        }
+        logger.trace("return buffer 0x{}", bytesToHex(buffer));
+        return new BitInputStream(new ByteArrayInputStream(buffer));
     }
 }

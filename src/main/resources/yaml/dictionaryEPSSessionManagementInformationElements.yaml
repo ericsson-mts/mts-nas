@@ -50,3 +50,18 @@ elements:
         name: "Spare"
         length: 1
         value: 0
+  - name : "Protocol configuration options" #9.9.4.11
+    ieiLength: 8
+    lengthField:
+      "@type": "LENGTH"
+      name: "Length of protocol config. options contents"
+      length: 8
+    pdu:
+      - name: "Configuration protocol"
+        length: 3
+        namedValue:
+          0: "PPP for use with IP PDP type or IP PDN type"
+      - "@type": "SPARE"
+        name: "Spare"
+        length: 4
+        value: 0

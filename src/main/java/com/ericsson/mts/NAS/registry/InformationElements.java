@@ -14,7 +14,7 @@ public class InformationElements {
 
     public AbstractInformationElement getElement(String elementName) {
         for (AbstractInformationElement informationElement : elements) {
-            if (elementName.equals(informationElement.getName())) {
+            if (elementName.equals(informationElement.name)) {
                 return informationElement;
             }
         }

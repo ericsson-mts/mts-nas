@@ -23,16 +23,26 @@ public class Registry {
 
     public void init() {
         for (AbstractMessage message : messages.getMessages()) {
-            message.setName(convertToCamelCase(message.getName()));
-            for (InformationElementsContainer informationElementsContainer : message.getInformationElements()) {
-                informationElementsContainer.setName(convertToCamelCase(informationElementsContainer.getName()));
-                informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.getType()));
+            message.setName(convertToCamelCase(message.name));
+
+            if(null != message.mandatory) {
+                for (InformationElementsContainer informationElementsContainer : message.mandatory) {
+                    informationElementsContainer.setName(convertToCamelCase(informationElementsContainer.name()));
+                    informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.type));
+                }
             }
+            if(null != message.optional){
+                for (InformationElementsContainer informationElementsContainer : message.optional.values()) {
+                    informationElementsContainer.setName(convertToCamelCase(informationElementsContainer.name()));
+                    informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.type));
+                }
+            }
+
         }
 
         for (AbstractInformationElement informationElement : informationElements.getElements()) {
-            informationElement.setName(convertToCamelCase(informationElement.getName()));
-            for (AbstractField abstractField : informationElement.getPdu()) {
+            informationElement.name =  convertToCamelCase(informationElement.name);
+            for (AbstractField abstractField : informationElement.pdu) {
                 initAbstractField(abstractField);
             }
         }
@@ -42,11 +52,11 @@ public class Registry {
         abstractField.setName(convertToCamelCase(abstractField.getName()));
         if (abstractField instanceof AbstractTranslatorField) {
             AbstractTranslatorField abstractTranslatorField = (AbstractTranslatorField) abstractField;
-            if (abstractTranslatorField.getNamedValue() != null) {
-                for (Integer key : abstractTranslatorField.getNamedValue().keySet()) {
-                    String value = abstractTranslatorField.getNamedValue().get(key);
+            if (abstractTranslatorField.namedValue != null) {
+                for (Integer key : abstractTranslatorField.namedValue.keySet()) {
+                    String value = abstractTranslatorField.namedValue.get(key);
                     if (value != null) {
-                        abstractTranslatorField.getNamedValue().put(key, convertToCamelCase(value));
+                        abstractTranslatorField.namedValue.put(key, convertToCamelCase(value));
                     }
                 }
             }

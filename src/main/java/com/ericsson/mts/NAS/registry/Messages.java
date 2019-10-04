@@ -14,7 +14,7 @@ public class Messages {
 
     public AbstractMessage getMessage(String messageName){
         for(AbstractMessage message : messages){
-            if(messageName.equals(message.getName())){
+            if(messageName.equals(message.name)){
                 return message;
             }
         }

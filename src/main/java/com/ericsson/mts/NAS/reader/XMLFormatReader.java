@@ -17,9 +17,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +52,7 @@ public class XMLFormatReader implements FormatReader {
         dbf.setXIncludeAware(false);
         dbf.setExpandEntityReferences(false);
         this.currentNode = dbf.newDocumentBuilder().parse(inputStream).getDocumentElement();
+        print(this.currentNode);
         ignoredObject = type;
     }
 
@@ -164,6 +169,27 @@ public class XMLFormatReader implements FormatReader {
         return stringList;
     }
 
+    private void print(Node node) {
+        Transformer transformer = null;
+        try {
+            transformer = TransformerFactory.newInstance().newTransformer();
+        } catch (TransformerConfigurationException e) {
+            e.printStackTrace();
+        }
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        //initialize StreamResult with File object to save to file
+        StreamResult result = new StreamResult(new StringWriter());
+        DOMSource source = new DOMSource(currentNode.getParentNode());
+        try {
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+        String xmlString = result.getWriter().toString();
+        System.out.println(xmlString);
+        System.out.println("--------------------------------------------------------------------------------------------");
+    }
     public String stringValue(String name) {
         if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
             return getChildNode(getFromStack(currentNode), name).getTextContent().trim();
@@ -176,10 +202,12 @@ public class XMLFormatReader implements FormatReader {
     }
 
     private Element getChildNode(Element node, String name) {
+
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
-            if (nodeList.item(i).getNodeName().equals(name)) {
-                return (Element) nodeList.item(i);
+            Node current = nodeList.item(i);
+            if (current.getNodeName().equals(name)) {
+                return (Element) current;
             }
         }
         return node;
@@ -198,5 +226,19 @@ public class XMLFormatReader implements FormatReader {
             return node1;
         }
         return node;
+    }
+
+    public Element exist(String name) {
+
+        Element node = getFromStack(currentNode);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node current = nodeList.item(i);
+            if (current.getNodeName().equals(name)) {
+                return (Element) current;
+            }
+        }
+        return null;
     }
 }

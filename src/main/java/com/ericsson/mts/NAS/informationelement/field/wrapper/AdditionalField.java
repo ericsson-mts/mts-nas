@@ -5,6 +5,7 @@ import com.ericsson.mts.NAS.exceptions.DecodingException;
 import com.ericsson.mts.NAS.exceptions.DictionaryException;
 import com.ericsson.mts.NAS.exceptions.NotHandledException;
 import com.ericsson.mts.NAS.informationelement.field.AbstractField;
+import com.ericsson.mts.NAS.reader.XMLFormatReader;
 import com.ericsson.mts.NAS.registry.Registry;
 import com.ericsson.mts.NAS.writer.FormatWriter;
 
@@ -50,5 +51,10 @@ public class AdditionalField extends AbstractField {
             }
         }
         return result;
+    }
+
+    @Override
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+        return "";
     }
 }
