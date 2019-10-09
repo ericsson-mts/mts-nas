@@ -140,6 +140,10 @@ public class XMLFormatWriter implements FormatWriter {
         return writer.toString();
     }
 
+    public Element getResultElement(){
+        return document.getDocumentElement();
+    }
+
     public static String bytesToHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
