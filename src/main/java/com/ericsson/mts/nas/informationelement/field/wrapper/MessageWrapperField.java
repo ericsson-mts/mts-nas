@@ -43,9 +43,14 @@ public class MessageWrapperField extends AbstractTranslatorField {
         for (Integer key : namedValue.keySet()) {
             if (value.equals(namedValue.get(key))) {
                 logger.trace("Encode message {} (0x{})", namedValue.get(key), String.format("%x", key));
-                hexaField.append(Integer.toHexString(key));
+                if(this.length < 8){
+                    binaryString.append(String.format("%"+length+"s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0'));
+                    binaryToHex(binaryString, hexaField);
+                }else{
+                    hexaField.append(Integer.toHexString(key));
+                }
                 r.enterObject(namedValue.get(key));
-                byteArray = mainRegistry.getMessage(namedValue.get(key)).encode(mainRegistry, r);
+                byteArray = mainRegistry.getMessage(namedValue.get(key)).encode(mainRegistry, r, binaryString);
                 r.leaveObject(namedValue.get(key));
             }
         }
@@ -62,5 +67,18 @@ public class MessageWrapperField extends AbstractTranslatorField {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    private void binaryToHex(StringBuilder binary, StringBuilder hexaString){
+
+        if (binary.length() == 8) {
+            int res = Integer.parseInt(binary.toString(), 2);
+            String hexStr = Integer.toString(res, 16);
+            if (hexStr.length() == 1) {
+                hexaString.append("0");
+            }
+            hexaString.append(hexStr);
+            binary.setLength(0);
+        }
     }
 }

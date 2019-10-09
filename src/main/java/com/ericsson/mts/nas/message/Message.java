@@ -43,9 +43,8 @@ public class Message extends AbstractMessage {
     }
 
     @Override
-    public byte[] encode(Registry mainRegistry, XMLFormatReader r) {
+    public byte[] encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
 
-        StringBuilder binaryString = new StringBuilder();
         StringBuilder hexaString = new StringBuilder();
 
         if(null != mandatory) {
@@ -85,6 +84,12 @@ public class Message extends AbstractMessage {
         }
 
         return DatatypeConverter.parseHexBinary(hexaString.toString());
+    }
+
+    @Override
+    public byte[] encode(Registry mainRegistry, XMLFormatReader r){
+        StringBuilder binaryString = new StringBuilder();
+        return encode(mainRegistry,r,binaryString);
     }
 
     private void readOptionnal(Registry mainRegistry, BitInputStream s, FormatWriter w) throws IOException, DecodingException, DictionaryException, NotHandledException {

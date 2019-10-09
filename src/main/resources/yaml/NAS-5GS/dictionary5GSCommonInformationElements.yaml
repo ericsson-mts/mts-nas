@@ -22,10 +22,11 @@ elements:
           254: "reserved"
   - name: "Security header type"
     pdu:
-      - name: "Security header type"
+      - "@type": "MESSAGE_WRAPPER"
+        name: "Security header type"
         length: 4
         namedValue:
-          0: "Plain 5GS NAS message, not security protected"
+          0: "Plain 5GS NAS message not security protected"
           1: "Integrity protected"
           2: "Integrity protected and ciphered"
           3: "Integrity protected with new 5G NAS security context"

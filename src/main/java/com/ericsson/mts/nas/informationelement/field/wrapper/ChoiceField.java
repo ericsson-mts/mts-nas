@@ -6,6 +6,7 @@ import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.FieldMapContainer;
+import com.ericsson.mts.nas.informationelement.field.translator.BinaryField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
@@ -63,8 +64,7 @@ public class ChoiceField extends AbstractField {
         for (FieldMapContainer fieldMapContainer : pdus) {
             if (fieldMapContainer.getKeys().contains(decimal)) {
                 for (AbstractField abstractField : fieldMapContainer.getPdu()) {
-                    String classe = abstractField.getClass().toString();
-                    if (classe.contains("MessageWrapperField") || classe.contains("BinaryField")) {
+                    if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass())){
                         hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
                     } else {
                         binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
@@ -91,3 +91,4 @@ public class ChoiceField extends AbstractField {
     }
 
 }
+

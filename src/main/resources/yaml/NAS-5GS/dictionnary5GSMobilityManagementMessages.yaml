@@ -1,4 +1,15 @@
 messages:
+  - name: "Plain 5GS NAS message not security protected"
+    mandatory:
+      - type: "Message type"
+        length: -1
+  - name: "Integrity protected with new 5G NAS security context"
+    mandatory:
+      - type: "Message authentication code"
+        length: 32
+      - type: "Sequence number"
+        name: "Sequence number"
+        length: 8
   - name: "Registration request"
     mandatory:
       - type: "5GS registration type"

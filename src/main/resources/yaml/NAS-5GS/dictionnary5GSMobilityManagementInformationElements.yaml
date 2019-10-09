@@ -6,6 +6,17 @@ elements:
         length: 4
         value: 0
 
+  - name: "Message authentication code"
+    pdu:
+      - "@type": "HEXA"
+        name: "Message authentication code value"
+        length: 32
+  - name: "Sequence number"
+    pdu:
+      - "@type": "BIN"
+        name: "Sequence number value"
+        length: 8
+
   - name: "5GS registration type" #9.11.3.7
     pdu:
       - name: Length

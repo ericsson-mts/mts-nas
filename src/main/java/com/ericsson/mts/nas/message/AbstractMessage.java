@@ -33,5 +33,6 @@ public abstract class AbstractMessage {
     }
 
     public abstract void decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException;
+    public abstract byte[] encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString);
     public abstract byte[] encode(Registry mainRegistry, XMLFormatReader r);
 }
