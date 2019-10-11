@@ -19,11 +19,13 @@ public class BinaryField extends AbstractTranslatorField {
         logger.trace("Enter field {} with length {}", name, length);
         byte[] buffer;
         int len;
-        if(null == length){
+        if (null != length && -1 != length) {
+            len = length;
+        } else if(null == length){
             len = s.bigReadBits(8).intValueExact() *8;
             formatWriter.intValue("Length", BigInteger.valueOf(len/8));
         } else {
-            len = this.length;
+            len = s.available();
         }
 
 //        formatWriter.intValue("Length", BigInteger.valueOf(len/8));

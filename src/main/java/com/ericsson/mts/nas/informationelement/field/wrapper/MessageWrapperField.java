@@ -23,7 +23,9 @@ public class MessageWrapperField extends AbstractTranslatorField {
             if(key == result){
                 logger.trace("Decode message {} (0x{})", namedValue.get(key), String.format("%x", key));
                 formatWriter.stringValue(name, namedValue.get(key));
-                mainRegistry.getMessage(namedValue.get(key)).decode(mainRegistry, bitInputStream, formatWriter);
+                if(null != mainRegistry.getMessage(namedValue.get(key))){
+                    mainRegistry.getMessage(namedValue.get(key)).decode(mainRegistry, bitInputStream, formatWriter);
+                }
                 return result;
             }
         }

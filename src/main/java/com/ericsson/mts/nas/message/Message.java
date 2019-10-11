@@ -20,26 +20,26 @@ import static com.ericsson.mts.nas.writer.XMLFormatWriter.bytesToHex;
 public class Message extends AbstractMessage {
 
     public void decode(Registry mainRegistry, BitInputStream s, FormatWriter w) throws IOException, DecodingException, DictionaryException, NotHandledException {
+
         w.enterObject(this.name);
 
-        if(null != mandatory) {
+        if (null != mandatory) {
             for (InformationElementsContainer c : mandatory) {
-                if (null != mainRegistry.getInformationElement(c.type)) {
-                    w.enterObject(c.name());
-                    mainRegistry.getInformationElement(c.type).decode(mainRegistry, read(c, s,w), w);
-                    w.leaveObject(c.name());
-                } else {
-                    logger.error("Impossible de trouver l'élement {}", c.type);
-                }
+                decodeInformationElement(mainRegistry,s,w,c);
             }
         }
 
-        while(s.available() > 0 && null != optional){
+        while (s.available() > 0 && null != optional) {
             readOptionnal(mainRegistry, s, w);
         }
 
-        w.leaveObject(this.name);
+        if (null != additionnal && s.available() > 0) {
+            for (InformationElementsContainer c : additionnal) {
+                decodeInformationElement(mainRegistry,s,w,c);
+            }
+        }
 
+        w.leaveObject(this.name);
     }
 
     @Override
@@ -51,13 +51,7 @@ public class Message extends AbstractMessage {
             for (InformationElementsContainer c : mandatory) {
                 if (null != mainRegistry.getInformationElement(c.type)) {
                     r.enterObject(c.name);
-                    if (null != r.exist("Length")) {
-                        String len = Integer.toHexString(r.intValue("Length").intValue());
-                        if (len.length() == 1) {
-                            hexaString.append("0");
-                        }
-                        hexaString.append(len);
-                    }
+                    checkLength(r,hexaString);
                     mainRegistry.getInformationElement(c.type).encode(mainRegistry, r, binaryString, hexaString);
                     r.leaveObject(c.name);
                 }
@@ -70,13 +64,7 @@ public class Message extends AbstractMessage {
                 if(null != r.exist(name)){
                     r.enterObject(name);
                     hexaString.append(entry.getKey());
-                    if(null != r.exist("Length")){
-                        String len = Integer.toHexString(r.intValue("Length").intValue());
-                        if(len.length() == 1){
-                            hexaString.append("0");
-                        }
-                        hexaString.append(len);
-                    }
+                    checkLength(r,hexaString);
                     mainRegistry.getInformationElement(entry.getValue().type).encode(mainRegistry,r,binaryString,hexaString);
                     r.leaveObject(name);
                 }
@@ -92,11 +80,33 @@ public class Message extends AbstractMessage {
         return encode(mainRegistry,r,binaryString);
     }
 
+    private void decodeInformationElement(Registry mainRegistry, BitInputStream s, FormatWriter w, InformationElementsContainer c) throws IOException, DecodingException, DictionaryException, NotHandledException {
+        if (null != mainRegistry.getInformationElement(c.type)) {
+            w.enterObject(c.name());
+            mainRegistry.getInformationElement(c.type).decode(mainRegistry, read(c, s, w), w);
+            w.leaveObject(c.name());
+        } else {
+            logger.error("Impossible de trouver l'élement {}", c.type);
+        }
+    }
+
+    private void checkLength(XMLFormatReader r, StringBuilder hexaString){
+        if(null != r.exist("Length")){
+            String len = Integer.toHexString(r.intValue("Length").intValue());
+            if(len.length() == 1){
+                hexaString.append("0");
+            }
+            hexaString.append(len);
+        }
+    }
+
+
     private void readOptionnal(Registry mainRegistry, BitInputStream s, FormatWriter w) throws IOException, DecodingException, DictionaryException, NotHandledException {
         String iei = Integer.toHexString(s.readBits(4)).toUpperCase();
         if(optional.containsKey(iei)){
             logger.trace("decode IEI : 0x{}",iei);
             w.enterObject(optional.get(iei).name());
+            w.stringValue("IEI", iei);
             mainRegistry.getInformationElement(optional.get(iei).type).decode(mainRegistry, read(optional.get(iei), s,w), w);
             w.leaveObject(optional.get(iei).name());
         } else {

@@ -37,6 +37,12 @@ public class Registry {
                     informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.type));
                 }
             }
+            if(null != message.additionnal) {
+                for (InformationElementsContainer informationElementsContainer : message.additionnal) {
+                    informationElementsContainer.setName(convertToCamelCase(informationElementsContainer.name()));
+                    informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.type));
+                }
+            }
 
         }
 
@@ -118,6 +124,7 @@ public class Registry {
     }
 
     private String convertToCamelCase(String text) {
+
         String result = "", result1 = "";
         for (int i = 0; i < text.length(); i++) {
             String next = text.substring(i, i + 1);
@@ -149,7 +156,7 @@ public class Registry {
             result += " " + splited1[i];
         }
         result = result.replaceAll(" ", "").replaceAll("-", "").replaceAll("/", "");
-        if(result.matches("^[1-9].*")){
+        if (result.matches("^[1-9].*")) {
             result = "A" + result;
         }
 
