@@ -51,13 +51,17 @@ public class MessageWrapperField extends AbstractTranslatorField {
                 }else{
                     hexaField.append(Integer.toHexString(key));
                 }
-                r.enterObject(namedValue.get(key));
-                byteArray = mainRegistry.getMessage(namedValue.get(key)).encode(mainRegistry, r, binaryString);
-                r.leaveObject(namedValue.get(key));
+                if(null != mainRegistry.getMessage(namedValue.get(key))) {
+                    r.enterObject(namedValue.get(key));
+                    byteArray = mainRegistry.getMessage(namedValue.get(key)).encode(mainRegistry, r, binaryString);
+                    r.leaveObject(namedValue.get(key));
+
+                    hexaField.append(bytesToHex(byteArray));
+                }
+                return hexaField.toString();
             }
         }
-        hexaField.append(bytesToHex(byteArray));
-        return hexaField.toString();
+        return "";
     }
 
     private static String bytesToHex(byte[] bytes) {

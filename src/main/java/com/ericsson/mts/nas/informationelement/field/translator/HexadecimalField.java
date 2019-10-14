@@ -49,6 +49,16 @@ public class HexadecimalField extends AbstractTranslatorField {
 
     @Override
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
-        return "";
+        StringBuilder res = new StringBuilder();
+        if(null == length){
+            if(null != r.exist("Length")){
+                String len = Integer.toHexString(r.intValue("Length").intValue());
+                if(len.length() == 1){
+                    res.append("0");
+                }
+                res.append(len);
+            }
+        }
+        return res.append(r.bytesValue(name)).toString();
     }
 }

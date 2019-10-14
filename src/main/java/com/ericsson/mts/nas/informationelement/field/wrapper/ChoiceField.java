@@ -38,9 +38,9 @@ public class ChoiceField extends AbstractField {
     public int decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException {
         logger.trace("Enter field {}", name);
         int result = field.decode(mainRegistry, bitInputStream, formatWriter);
-        for(FieldMapContainer fieldMapContainer : pdus){
-            if(fieldMapContainer.getKeys().contains(result)){
-                for(AbstractField abstractField : fieldMapContainer.getPdu()){
+        for (FieldMapContainer fieldMapContainer : pdus) {
+            if (fieldMapContainer.getKeys().contains(result)) {
+                for (AbstractField abstractField : fieldMapContainer.getPdu()) {
                     abstractField.decode(mainRegistry, bitInputStream, formatWriter);
                 }
                 return result;
@@ -64,26 +64,30 @@ public class ChoiceField extends AbstractField {
         for (FieldMapContainer fieldMapContainer : pdus) {
             if (fieldMapContainer.getKeys().contains(decimal)) {
                 for (AbstractField abstractField : fieldMapContainer.getPdu()) {
-                    if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass())){
+                    if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass())) {
                         hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
                     } else {
                         binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
                         binaryToHex(binaryString, hexaString);
                     }
-                    return hexaString.toString();
                 }
+                return hexaString.toString();
             }
         }
-            return "";
+        return "";
     }
 
-    private void binaryToHex(StringBuilder binary, StringBuilder hexaString){
+    private void binaryToHex(StringBuilder binary, StringBuilder hexaString) {
 
-        if (binary.length() == 8) {
+        if (binary.length() >= 8) {
             int res = Integer.parseInt(binary.toString(), 2);
             String hexStr = Integer.toString(res, 16);
             if (hexStr.length() == 1) {
-                hexaString.append("0");
+                if(binary.length() == 16){
+                    hexaString.append("000");
+                }else{
+                    hexaString.append("0");
+                }
             }
             hexaString.append(hexStr);
             binary.setLength(0);

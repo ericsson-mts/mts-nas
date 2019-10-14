@@ -83,18 +83,6 @@ elements:
           211: "PDU session release command"
           212: "PDU session release complete"
           214: "5GSM status"
-
-
-
-
-
-
-
-
-
-
-
-
   - name: "Spare half octet header"
     pdu:
       - "@type": "SPARE"

@@ -34,9 +34,11 @@ public class Message extends AbstractMessage {
         }
 
         if (null != additionnal && s.available() > 0) {
+            w.enterObject("PlainNas5GsMessage");
             for (InformationElementsContainer c : additionnal) {
                 decodeInformationElement(mainRegistry,s,w,c);
             }
+            w.leaveObject("PlainNas5GsMessage");
         }
 
         w.leaveObject(this.name);
@@ -63,12 +65,29 @@ public class Message extends AbstractMessage {
                 String name = entry.getValue().name;
                 if(null != r.exist(name)){
                     r.enterObject(name);
-                    hexaString.append(entry.getKey());
+                    if(entry.getKey().length() < 2){
+                        binaryString.append(String.format("%4s", Integer.toBinaryString(Integer.valueOf(entry.getKey()).byteValue() & 0xFF)).replace(' ', '0'));
+                    } else{
+                        hexaString.append(entry.getKey());
+                    }
                     checkLength(r,hexaString);
                     mainRegistry.getInformationElement(entry.getValue().type).encode(mainRegistry,r,binaryString,hexaString);
                     r.leaveObject(name);
                 }
             }
+        }
+
+        if(null != additionnal && null != r.exist("PlainNas5GsMessage")){
+            r.enterObject("PlainNas5GsMessage");
+            for (InformationElementsContainer c : additionnal){
+                if(null != r.exist(c.name)){
+                    r.enterObject(c.name);
+                    checkLength(r,hexaString);
+                    mainRegistry.getInformationElement(c.type).encode(mainRegistry,r,binaryString,hexaString);
+                    r.leaveObject(c.name);
+                }
+            }
+            r.leaveObject("PlainNas5GsMessage");
         }
 
         return DatatypeConverter.parseHexBinary(hexaString.toString());

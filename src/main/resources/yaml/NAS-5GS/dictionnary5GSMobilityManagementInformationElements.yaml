@@ -8,7 +8,7 @@ elements:
   - name: "Spare half octet 3"
     pdu:
       - "@type": "SPARE"
-        name: "Spare"
+        name: "Spare half octet 3"
         length: 4
         value: 3
 
@@ -356,6 +356,8 @@ elements:
 
   - name: "5GS registration result"
     pdu:
+      - name: "Length"
+        length: 8
       - "@type": "SPARE"
         name: "Spare"
         length: 1
@@ -378,7 +380,7 @@ elements:
           0: "SMS over NAS not allowed"
           1: "SMS over NAS allowed"
       - name: "5GS registration result value"
-        length: 1
+        length: 3
         namedValue:
           1: "3GPP access"
           2: "Non-3GPP access"

@@ -6,6 +6,7 @@ import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.translator.BinaryField;
+import com.ericsson.mts.nas.informationelement.field.translator.HexadecimalField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
@@ -34,7 +35,7 @@ public class InformationElement extends AbstractInformationElement {
 
         r.enterObject(name);
         for (AbstractField abstractField : pdu) {
-            if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass()))
+            if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass()) || HexadecimalField.class.isAssignableFrom(abstractField.getClass()))
             {
                 hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
             } else {

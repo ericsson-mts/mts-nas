@@ -47,7 +47,7 @@ public class SpareField extends AbstractField {
     @Override
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
 
-        String res = Integer.toHexString(this.value);
+        String res = Integer.toHexString(value);
         logger.trace("Spare value : {} to hex value 0x{}", this.value, res);
         return String.format("%"+length+"s", Integer.toBinaryString(((Integer)value).byteValue() & 0xFF)).replace(' ', '0');
 
