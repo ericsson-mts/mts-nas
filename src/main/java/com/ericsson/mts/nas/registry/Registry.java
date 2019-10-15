@@ -1,15 +1,12 @@
 package com.ericsson.mts.nas.registry;
 
 import com.ericsson.mts.nas.informationelement.AbstractInformationElement;
-import com.ericsson.mts.nas.informationelement.InformationElement;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.informationelement.field.FieldMapContainer;
-import com.ericsson.mts.nas.informationelement.field.wrapper.AdditionalField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.message.AbstractMessage;
 import com.ericsson.mts.nas.message.InformationElementsContainer;
-import com.ericsson.mts.nas.message.Message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -66,11 +63,13 @@ public class Registry {
                     }
                 }
             }
-        } else if (abstractField instanceof AdditionalField) {
-            AdditionalField additionalField = (AdditionalField) abstractField;
-            initAbstractField(additionalField.getField());
-            initAbstractField(additionalField.getAdditionnalField());
-        } else if(abstractField instanceof ChoiceField){
+        }
+//        else if (abstractField instanceof AdditionalField) {
+//            AdditionalField additionalField = (AdditionalField) abstractField;
+//            initAbstractField(additionalField.getField());
+//            initAbstractField(additionalField.getAdditionnalField());
+//        }
+        else if(abstractField instanceof ChoiceField){
             ChoiceField choiceField = (ChoiceField) abstractField;
             initAbstractField(choiceField.getField());
             for(FieldMapContainer fieldMapContainer : choiceField.getPdus()){

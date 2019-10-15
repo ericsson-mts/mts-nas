@@ -10,7 +10,6 @@ import com.ericsson.mts.nas.BitInputStream;
 import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
-import com.ericsson.mts.nas.informationelement.field.wrapper.AdditionalField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
@@ -27,7 +26,6 @@ import java.io.IOException;
 @JsonSubTypes({
         @JsonSubTypes.Type(value= ChoiceField.class, name = "CHOICE"),
         @JsonSubTypes.Type(value= DecimalField.class, name = "DEC"),
-        @JsonSubTypes.Type(value = AdditionalField.class, name = "EXTENSION"),
         @JsonSubTypes.Type(value = MessageWrapperField.class, name = "MESSAGE_WRAPPER"),
         @JsonSubTypes.Type(value = SpareField.class, name = "SPARE"),
         @JsonSubTypes.Type(value = DigitsField.class, name = "DIGITS"),
