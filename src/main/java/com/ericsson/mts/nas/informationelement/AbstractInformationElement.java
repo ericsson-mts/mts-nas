@@ -17,10 +17,10 @@ import java.io.IOException;
 import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, defaultImpl = InformationElement.class)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value= L3MessageWrapperIE.class, name = "L3 message wrapper"),
-        @JsonSubTypes.Type(value = VariableLengthIE.class, name = "VARIABLE LENGTH")
-})
+//@JsonSubTypes({
+//        @JsonSubTypes.Type(value= L3MessageWrapperIE.class, name = "L3 message wrapper"),
+//        @JsonSubTypes.Type(value = VariableLengthIE.class, name = "VARIABLE LENGTH")
+//})
 public abstract class AbstractInformationElement {
     protected Logger logger = LoggerFactory.getLogger(this.getClass().getSimpleName());
     public String name;
