@@ -5,15 +5,6 @@ messages :
         length: 4
       - type: "Payload container type"
         length: -1
-      - type: "Extended protocol discriminator"
-        length : 8
-      - type: "PDU Session Identity"
-        length: 8
-      - type: "Procedure transaction identity"
-        name: "PTI"
-        length: 8
-      - type: "Message type"
-        length: -1
     optional:
       70:
         type: "PDU session identity 2"
@@ -56,7 +47,13 @@ messages :
         length: 4
       - type: "DNN"
         length: -1
-      - type: "QoSRules"
+      - type: "Authorized QoS rules"
+        name: "QoSRules"
         length: -1
+      - type: "Session-AMBR"
+    optional:
+        29:
+          type: "PDU address"
+          length: 104
 
 

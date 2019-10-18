@@ -1,11 +1,7 @@
 package com.ericsson.mts.nas.informationelement.field;
 
 
-import com.ericsson.mts.nas.informationelement.field.translator.SpareField;
-import com.ericsson.mts.nas.informationelement.field.translator.DigitsField;
-import com.ericsson.mts.nas.informationelement.field.translator.HexadecimalField;
-import com.ericsson.mts.nas.informationelement.field.translator.DecimalField;
-import com.ericsson.mts.nas.informationelement.field.translator.BinaryField;
+import com.ericsson.mts.nas.informationelement.field.translator.*;
 import com.ericsson.mts.nas.BitInputStream;
 import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
@@ -30,7 +26,11 @@ import java.io.IOException;
         @JsonSubTypes.Type(value = SpareField.class, name = "SPARE"),
         @JsonSubTypes.Type(value = DigitsField.class, name = "DIGITS"),
         @JsonSubTypes.Type(value = HexadecimalField.class, name = "HEXA"),
-        @JsonSubTypes.Type(value = BinaryField.class, name = "BIN")
+        @JsonSubTypes.Type(value = BinaryField.class, name = "BIN"),
+        @JsonSubTypes.Type(value = MultipleField.class, name = "MULTI"),
+        @JsonSubTypes.Type(value = BinaryLengthField.class, name = "BINLENGTH"),
+        @JsonSubTypes.Type(value = TextField.class, name = "TEXT"),
+
 
 })
 public abstract class AbstractField {

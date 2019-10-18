@@ -4,7 +4,9 @@ import com.ericsson.mts.nas.informationelement.AbstractInformationElement;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.informationelement.field.FieldMapContainer;
+import com.ericsson.mts.nas.informationelement.field.translator.BinaryLengthField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
+import com.ericsson.mts.nas.informationelement.field.translator.MultipleField;
 import com.ericsson.mts.nas.message.AbstractMessage;
 import com.ericsson.mts.nas.message.InformationElementsContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -76,6 +78,18 @@ public class Registry {
                 for(AbstractField abstractField1 : fieldMapContainer.getPdu()){
                     initAbstractField(abstractField1);
                 }
+            }
+        }
+        else if (abstractField instanceof MultipleField) {
+            MultipleField multipleField = (MultipleField) abstractField;
+            for(AbstractField abstractField1: multipleField.pdu){
+                initAbstractField(abstractField1);
+            }
+        }
+        else if (abstractField instanceof BinaryLengthField) {
+            BinaryLengthField binaryLengthField = (BinaryLengthField) abstractField;
+            for(AbstractField abstractField1: binaryLengthField.pdu){
+                initAbstractField(abstractField1);
             }
         }
     }

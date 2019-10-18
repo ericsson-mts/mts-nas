@@ -64,7 +64,7 @@ public class ChoiceField extends AbstractField {
         for (FieldMapContainer fieldMapContainer : pdus) {
             if (fieldMapContainer.getKeys().contains(decimal)) {
                 for (AbstractField abstractField : fieldMapContainer.getPdu()) {
-                    if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass())) {
+                    if (abstractField instanceof MessageWrapperField || abstractField instanceof BinaryField || abstractField instanceof ChoiceField) {
                         hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
                     } else {
                         binaryString.append(abstractField.encode(mainRegistry, r, binaryString));

@@ -3,6 +3,7 @@ package com.ericsson.mts.nas.informationelement.field.translator;
 import com.ericsson.mts.nas.BitInputStream;
 import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
+import com.ericsson.mts.nas.reader.Reader;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
@@ -27,20 +28,7 @@ public class HexadecimalField extends AbstractTranslatorField {
         }
         formatWriter.intValue("Length", BigInteger.valueOf(len));
 
-        logger.trace("reading {} bits", len);
-        buffer = new byte[len / 8 + ((len % 8) > 0 ? 1 : 0)];
-        int offset = 7;
-        int index = 0;
-        while (len > 0) {
-            byte bitValue = (byte) s.readBit();
-            buffer[index] = (byte) (buffer[index] | (bitValue << offset));
-            offset--;
-            if (-1 == offset) {
-                index++;
-                offset = 7;
-            }
-            len--;
-        }
+        buffer = Reader.readByte(len,s,logger);
 
         formatWriter.bytesValue(name, buffer);
         logger.trace("return buffer 0x{}", bytesToHex(buffer));
@@ -48,17 +36,7 @@ public class HexadecimalField extends AbstractTranslatorField {
     }
 
     @Override
-    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
-        StringBuilder res = new StringBuilder();
-        if(null == length){
-            if(null != r.exist("Length")){
-                String len = Integer.toHexString(r.intValue("Length").intValue());
-                if(len.length() == 1){
-                    res.append("0");
-                }
-                res.append(len);
-            }
-        }
-        return res.append(r.bytesValue(name)).toString();
+    public  String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+        return Reader.encodeHexaAndBinary(length,name,r);
     }
 }

@@ -35,7 +35,7 @@ public class InformationElement extends AbstractInformationElement {
 
         r.enterObject(name);
         for (AbstractField abstractField : pdu) {
-            if (MessageWrapperField.class.isAssignableFrom(abstractField.getClass()) || BinaryField.class.isAssignableFrom(abstractField.getClass()) || ChoiceField.class.isAssignableFrom(abstractField.getClass()) || HexadecimalField.class.isAssignableFrom(abstractField.getClass()))
+            if (abstractField instanceof MessageWrapperField || abstractField instanceof  BinaryField ||  abstractField instanceof  ChoiceField || abstractField instanceof HexadecimalField)
             {
                 hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
             } else {
