@@ -27,6 +27,6 @@ public class DigitsField extends AbstractTranslatorField {
     @Override
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
         String value = r.stringValue(name);
-        return String.format("%"+length+"s", Integer.toBinaryString(Integer.valueOf(value).byteValue() & 0xFF)).replace(' ', '0');
+        return String.format("%"+length+"s",Integer.toBinaryString(Integer.parseInt(Integer.toHexString(Integer.parseInt(value)), 16))).replace(' ', '0');
     }
 }

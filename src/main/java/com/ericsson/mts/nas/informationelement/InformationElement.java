@@ -5,8 +5,8 @@ import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
-import com.ericsson.mts.nas.informationelement.field.translator.BinaryField;
-import com.ericsson.mts.nas.informationelement.field.translator.HexadecimalField;
+import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
+import com.ericsson.mts.nas.informationelement.field.translator.*;
 import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
@@ -24,7 +24,9 @@ public class InformationElement extends AbstractInformationElement {
         int result = -1;
         formatWriter.enterObject(name);
         for (AbstractField abstractField : pdu) {
-            result = abstractField.decode(mainRegistry, bitInputStream, formatWriter);
+            if(bitInputStream.available() > 0){
+                result = abstractField.decode(mainRegistry, bitInputStream, formatWriter);
+            }
         }
         formatWriter.leaveObject(name);
         return result;
@@ -35,22 +37,21 @@ public class InformationElement extends AbstractInformationElement {
 
         r.enterObject(name);
         for (AbstractField abstractField : pdu) {
-            if (abstractField instanceof MessageWrapperField || abstractField instanceof  BinaryField ||  abstractField instanceof  ChoiceField || abstractField instanceof HexadecimalField)
-            {
-                hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
-            } else {
-                binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
-                if (binaryString.length() == 8) {
-                    int decimal = Integer.parseInt(binaryString.toString(), 2);
-                    String hexStr = Integer.toString(decimal, 16);
-                    if (hexStr.length() == 1) {
-                        hexaString.append("0");
+                if (abstractField instanceof MessageWrapperField || abstractField instanceof BinaryField || abstractField instanceof ChoiceField || abstractField instanceof HexadecimalField || abstractField instanceof MultipleField) {
+                    hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
+                } else {
+                    binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
+                    if(!binaryString.toString().equals("")) {
+                        if (binaryString.length() % 8 == 0) {
+                            if((((AbstractTranslatorField)abstractField).length)%8 == 0){
+                                hexaString.append(String.format("%0"+(((AbstractTranslatorField)abstractField).length/4)+"X", Long.parseLong(binaryString.toString(),2)));
+                            }else{
+                                hexaString.append(String.format("%02X", Long.parseLong(binaryString.toString(),2)));
+                            }
+                            binaryString.setLength(0);
+                        }
                     }
-                    hexaString.append(hexStr);
-                    binaryString.setLength(0);
                 }
-            }
-
         }
         r.leaveObject(name);
     }

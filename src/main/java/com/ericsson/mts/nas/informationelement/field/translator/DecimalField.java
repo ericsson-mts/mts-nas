@@ -19,6 +19,9 @@ public class DecimalField extends AbstractTranslatorField {
 
         if(null == length){
             length = (bitInputStream.bigReadBits(8).intValueExact());
+            if(length == 0){
+                length = (bitInputStream.bigReadBits(8).intValueExact());
+            }
             logger.trace("Calcul length {}", length);
         }
 

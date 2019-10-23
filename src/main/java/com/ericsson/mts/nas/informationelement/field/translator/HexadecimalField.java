@@ -22,7 +22,7 @@ public class HexadecimalField extends AbstractTranslatorField {
         byte[] buffer;
         int len;
         if(null == length){
-            len = s.bigReadBits(8).intValueExact();
+            len = s.bigReadBits(nBitLength).intValueExact();
         } else {
             len = this.length;
         }

@@ -4,6 +4,7 @@ public class InformationElementsContainer {
     public String name;
     public String type;
     public Integer length;
+    public Integer nBitLength = 8;
 
     public void setName(String name) {
         this.name = name;

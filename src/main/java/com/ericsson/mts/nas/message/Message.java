@@ -53,7 +53,7 @@ public class Message extends AbstractMessage {
             for (InformationElementsContainer c : mandatory) {
                 if (null != mainRegistry.getInformationElement(c.type)) {
                     r.enterObject(c.name);
-                    checkLength(r,hexaString);
+                    checkLength(r,hexaString, c.nBitLength);
                     mainRegistry.getInformationElement(c.type).encode(mainRegistry, r, binaryString, hexaString);
                     r.leaveObject(c.name);
                 }
@@ -66,11 +66,11 @@ public class Message extends AbstractMessage {
                 if(null != r.exist(name)){
                     r.enterObject(name);
                     if(entry.getKey().length() < 2){
-                        binaryString.append(String.format("%4s", Integer.toBinaryString(Integer.valueOf(entry.getKey()).byteValue() & 0xFF)).replace(' ', '0'));
+                        binaryString.append(String.format("%4s", new BigInteger(entry.getKey(),16).toString(2)));
                     } else{
                         hexaString.append(entry.getKey());
                     }
-                    checkLength(r,hexaString);
+                    checkLength(r,hexaString, entry.getValue().nBitLength);
                     mainRegistry.getInformationElement(entry.getValue().type).encode(mainRegistry,r,binaryString,hexaString);
                     r.leaveObject(name);
                 }
@@ -82,7 +82,7 @@ public class Message extends AbstractMessage {
             for (InformationElementsContainer c : additionnal){
                 if(null != r.exist(c.name)){
                     r.enterObject(c.name);
-                    checkLength(r,hexaString);
+                    checkLength(r,hexaString, c.nBitLength);
                     mainRegistry.getInformationElement(c.type).encode(mainRegistry,r,binaryString,hexaString);
                     r.leaveObject(c.name);
                 }
@@ -109,12 +109,9 @@ public class Message extends AbstractMessage {
         }
     }
 
-    private void checkLength(XMLFormatReader r, StringBuilder hexaString){
+    private void checkLength(XMLFormatReader r, StringBuilder hexaString, Integer nbits){
         if(null != r.exist("Length")){
-            String len = Integer.toHexString(r.intValue("Length").intValue());
-            if(len.length() == 1){
-                hexaString.append("0");
-            }
+            String len = String.format("%"+nbits/4+"s",Integer.toHexString(r.intValue("Length").intValue())).replace(' ', '0');
             hexaString.append(len);
         }
     }
@@ -137,7 +134,7 @@ public class Message extends AbstractMessage {
                 mainRegistry.getInformationElement(optional.get(iei).type).decode(mainRegistry, read(optional.get(iei), s,w), w);
                 w.leaveObject(optional.get(iei).name());
             } else {
-                throw new RuntimeException("Unknown IEI " + iei);
+                logger.error("Unknown IEI " + iei);
             }
         }
     }
@@ -145,10 +142,11 @@ public class Message extends AbstractMessage {
     private BitInputStream read(InformationElementsContainer c, BitInputStream s, FormatWriter w) throws IOException {
         byte[] buffer;
         int len;
+
         if (null != c.length && -1 != c.length) {
             len = c.length;
         } else if (null == c.length) {
-            len = s.bigReadBits(8).intValueExact() *8;
+            len = s.bigReadBits(c.nBitLength).intValueExact() *8;
             w.intValue("Length", BigInteger.valueOf(len/8));
         } else {
             return s;
