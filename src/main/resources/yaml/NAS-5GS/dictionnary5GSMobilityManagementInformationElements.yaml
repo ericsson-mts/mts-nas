@@ -26,7 +26,8 @@ elements:
 
   - name: "5GS registration type" #9.11.3.7
     pdu:
-      - name: Length
+      - "@type": "DIGITS"
+        name: Length
         length: 8
       - "@type": "SPARE"
         name: "Spare"
@@ -63,7 +64,8 @@ elements:
 
   - name: "NAS key set identifier"
     pdu:
-      - name: IEI
+      - "@type": "DIGITS"
+        name: IEI
         length: 4
       - name: "TSC"
         length: 1
@@ -79,7 +81,8 @@ elements:
 
   - name: "NAS key set identifier1"
     pdu:
-        - name: IEI
+        - "@type": "DIGITS"
+          name: IEI
           length: 4
         - name: "TSC"
           length: 1
@@ -95,7 +98,8 @@ elements:
 
   - name: "5GS mobile identity"
     pdu:
-      - name: "digit"
+      - "@type": "DIGITS"
+        name: "digit"
         length: 4
       - name: "odd even indication"
         length: 1
@@ -307,7 +311,8 @@ elements:
         length: 128
   - name: "Authentication Parameter AUTN"
     pdu:
-      - name: "Length"
+      - "@type": "DIGITS"
+        name: "Length"
         length : 8
       - "@type": BIN
         name: "SQN xor AK"
@@ -356,7 +361,8 @@ elements:
 
   - name: "5GS registration result"
     pdu:
-      - name: "Length"
+      - "@type": "DIGITS"
+        name: "Length"
         length: 8
       - "@type": "SPARE"
         name: "Spare"
@@ -407,7 +413,8 @@ elements:
           - keys:
               - 1
             pdu:
-              - name: "Length"
+              - "@type": "DIGITS"
+                name: "Length"
                 length: 16
               - name: "Extended protocol discriminator"
                 length : 8
@@ -462,7 +469,8 @@ elements:
               - 4
               - 5
             pdu:
-              - name: IEI
+              - "@type": "DIGITS"
+                name: IEI
                 length: 8
               - "@type" : "BIN"
                 name : "Payload container contents"

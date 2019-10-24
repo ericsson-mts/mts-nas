@@ -5,8 +5,11 @@ import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
+import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.informationelement.field.FieldMapContainer;
 import com.ericsson.mts.nas.informationelement.field.translator.BinaryField;
+import com.ericsson.mts.nas.informationelement.field.translator.BinaryLengthField;
+import com.ericsson.mts.nas.informationelement.field.translator.MultipleField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
@@ -64,7 +67,7 @@ public class ChoiceField extends AbstractField {
         for (FieldMapContainer fieldMapContainer : pdus) {
             if (fieldMapContainer.getKeys().contains(decimal)) {
                 for (AbstractField abstractField : fieldMapContainer.getPdu()) {
-                    if (abstractField instanceof MessageWrapperField || abstractField instanceof BinaryField || abstractField instanceof ChoiceField) {
+                    if (abstractField instanceof MessageWrapperField || abstractField instanceof BinaryField || abstractField instanceof ChoiceField || abstractField instanceof BinaryLengthField || abstractField instanceof MultipleField) {
                         hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
                     } else {
                         binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
@@ -93,6 +96,5 @@ public class ChoiceField extends AbstractField {
             binary.setLength(0);
         }
     }
-
 }
 

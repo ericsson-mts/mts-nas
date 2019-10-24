@@ -47,18 +47,7 @@ public class DecimalField extends AbstractTranslatorField {
     @Override
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
 
-        String value;
-
-        if(name.equals("Iei") || name.equals("Digit")){
-            BigInteger iei = r.intValue(name);
-            return String.format("%"+length+"s", Integer.toBinaryString(iei.byteValue() & 0xFF)).replace(' ', '0');
-        } else if(name.equals("Length")){
-            value = r.stringValue(name);
-            logger.trace("length to byte value {}",value);
-            return String.format("%"+length+"s", Integer.toBinaryString(Integer.valueOf(value).byteValue() & 0xFF)).replace(' ', '0');
-        }else{
-            value = r.stringValue(name);
-        }
+        String value = r.stringValue(name);
 
         for (Integer key : namedValue.keySet()) {
             if (value.equals(namedValue.get(key))){

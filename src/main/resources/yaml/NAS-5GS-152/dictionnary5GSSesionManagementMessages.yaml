@@ -53,8 +53,6 @@ messages :
         length: 4
       - type: "PDU session type"
         length: 4
-#      - type: "DNN"
-#        length: -1
       - type: "Authorized QoS rules"
         name: "QoSRules"
         length: -1

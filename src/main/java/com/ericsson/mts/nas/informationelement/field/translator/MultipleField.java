@@ -32,10 +32,8 @@ public class MultipleField extends AbstractField {
     public int decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException {
 
         if (contentLength.toLowerCase().contains("number")) {
-            formatWriter.enterObject(pdu.get(0).getName());
-            int result = bitInputStream.readBits(((DecimalField)pdu.get(0)).length);
-            formatWriter.intValue("Length", BigInteger.valueOf(result));
-            formatWriter.leaveObject(pdu.get(0).getName());
+            int result = bitInputStream.readBits(((DigitsField)pdu.get(0)).length);
+            formatWriter.intValue(pdu.get(0).getName(), BigInteger.valueOf(result));
             logger.trace("Number element " + result);
 
             for (int i = 0; i < result; i++) {
@@ -51,7 +49,7 @@ public class MultipleField extends AbstractField {
         if(contentLength.toLowerCase().contains("length")){
             int i = 0;
             int result = bitInputStream.bigReadBits(nBit).intValueExact();
-            formatWriter.intValue("Length", BigInteger.valueOf(result));
+            formatWriter.intValue("LengthMultipleField", BigInteger.valueOf(result));
 
             BitInputStream buffer = read(result,bitInputStream);
 
@@ -74,13 +72,20 @@ public class MultipleField extends AbstractField {
         StringBuilder hexaString = new StringBuilder();
         int i = 1;
 
-        binaryToHex(binaryString.append(String.format("%"+nBit+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue("Length")).byteValue() & 0xFF)).replace(' ', '0')),hexaString);
+        if(r.exist("LengthObject") != null){
+            binaryToHex(binaryString.append(String.format("%"+nBit+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue("LengthObject")).byteValue() & 0xFF)).replace(' ', '0')),hexaString);
+        }
+        else{
+            binaryToHex(binaryString.append(String.format("%"+((AbstractTranslatorField)pdu.get(0)).length+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue(pdu.get(0).getName())).byteValue() & 0xFF)).replace(' ', '0')),hexaString);
+            pdu =  pdu.subList(1, pdu.size());
+        }
+
 
         while(r.exist(name + i) != null){
             logger.trace("Enter field {}", name+i);
             r.enterObject(name+i);
             for(AbstractField abstractField: pdu){
-                if (abstractField instanceof MessageWrapperField || abstractField instanceof  BinaryField ||  abstractField instanceof  ChoiceField || abstractField instanceof HexadecimalField) {
+                if (abstractField instanceof MessageWrapperField || abstractField instanceof  BinaryField ||  abstractField instanceof  ChoiceField || abstractField instanceof HexadecimalField || abstractField instanceof BinaryLengthField) {
                     hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
                 } else {
                     binaryString.append(abstractField.encode(mainRegistry, r, binaryString));

@@ -65,12 +65,12 @@ public class Registry {
                     }
                 }
             }
+            if(abstractTranslatorField.pdu != null){
+                for(AbstractField abstractField1: abstractTranslatorField.pdu){
+                    initAbstractField(abstractField1);
+                }
+            }
         }
-//        else if (abstractField instanceof AdditionalField) {
-//            AdditionalField additionalField = (AdditionalField) abstractField;
-//            initAbstractField(additionalField.getField());
-//            initAbstractField(additionalField.getAdditionnalField());
-//        }
         else if(abstractField instanceof ChoiceField){
             ChoiceField choiceField = (ChoiceField) abstractField;
             initAbstractField(choiceField.getField());
@@ -83,12 +83,6 @@ public class Registry {
         else if (abstractField instanceof MultipleField) {
             MultipleField multipleField = (MultipleField) abstractField;
             for(AbstractField abstractField1: multipleField.pdu){
-                initAbstractField(abstractField1);
-            }
-        }
-        else if (abstractField instanceof BinaryLengthField) {
-            BinaryLengthField binaryLengthField = (BinaryLengthField) abstractField;
-            for(AbstractField abstractField1: binaryLengthField.pdu){
                 initAbstractField(abstractField1);
             }
         }
