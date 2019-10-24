@@ -23,10 +23,7 @@ public class BinaryField extends AbstractTranslatorField {
         if (null != length && -1 != length) {
             len = length;
         } else if(null == length){
-            len = s.bigReadBits(8).intValueExact() *8;
-            if(len == 0){
-                len = s.bigReadBits(8).intValueExact() *8;
-            }
+            len = s.bigReadBits(nBitLength).intValueExact() *8;
             formatWriter.intValue("Length", BigInteger.valueOf(len/8));
         } else {
             len = s.available();

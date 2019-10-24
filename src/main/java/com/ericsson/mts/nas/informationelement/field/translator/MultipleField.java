@@ -49,7 +49,7 @@ public class MultipleField extends AbstractField {
         if(contentLength.toLowerCase().contains("length")){
             int i = 0;
             int result = bitInputStream.bigReadBits(nBit).intValueExact();
-            formatWriter.intValue("LengthMultipleField", BigInteger.valueOf(result));
+            formatWriter.intValue("LengthObject", BigInteger.valueOf(result));
 
             BitInputStream buffer = read(result,bitInputStream);
 

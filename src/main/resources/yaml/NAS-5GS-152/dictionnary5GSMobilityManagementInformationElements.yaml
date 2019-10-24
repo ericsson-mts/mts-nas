@@ -424,6 +424,7 @@ elements:
     pdu:
       - name: "EAP message"
         "@type": BIN
+        nBitLength: 16
 
   - name: "NAS security algorithms"
     pdu:
