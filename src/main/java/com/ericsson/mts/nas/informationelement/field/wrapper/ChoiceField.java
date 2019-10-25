@@ -7,15 +7,15 @@ import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.informationelement.field.FieldMapContainer;
-import com.ericsson.mts.nas.informationelement.field.translator.BinaryField;
-import com.ericsson.mts.nas.informationelement.field.translator.BinaryLengthField;
-import com.ericsson.mts.nas.informationelement.field.translator.MultipleField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 
 import java.io.IOException;
 import java.util.List;
+
+import static com.ericsson.mts.nas.reader.Reader.encodeFields;
+import static com.ericsson.mts.nas.reader.XMLFormatReader.binaryToHex;
 
 public class ChoiceField extends AbstractField {
     private AbstractField field;
@@ -53,7 +53,7 @@ public class ChoiceField extends AbstractField {
     }
 
     @Override
-    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
         logger.trace("Enter field {}", name);
 
         StringBuilder hexaString = new StringBuilder();
@@ -62,39 +62,15 @@ public class ChoiceField extends AbstractField {
         result.append(field.encode(mainRegistry, r, binaryString));
         binaryString.append(result);
         int decimal = Integer.parseInt(result.toString(), 2);
-        binaryToHex(binaryString, hexaString);
+        binaryToHex(binaryString, hexaString, ((AbstractTranslatorField) field).length);
 
         for (FieldMapContainer fieldMapContainer : pdus) {
             if (fieldMapContainer.getKeys().contains(decimal)) {
-                for (AbstractField abstractField : fieldMapContainer.getPdu()) {
-                    if (abstractField instanceof MessageWrapperField || abstractField instanceof BinaryField || abstractField instanceof ChoiceField || abstractField instanceof BinaryLengthField || abstractField instanceof MultipleField) {
-                        hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
-                    } else {
-                        binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
-                        binaryToHex(binaryString, hexaString);
-                    }
-                }
+                encodeFields(fieldMapContainer.getPdu(),mainRegistry,r,binaryString,hexaString);
                 return hexaString.toString();
             }
         }
-        return "";
-    }
-
-    private void binaryToHex(StringBuilder binary, StringBuilder hexaString) {
-
-        if (binary.length() >= 8) {
-            int res = Integer.parseInt(binary.toString(), 2);
-            String hexStr = Integer.toString(res, 16);
-            if (hexStr.length() == 1) {
-                if(binary.length() == 16){
-                    hexaString.append("000");
-                }else{
-                    hexaString.append("0");
-                }
-            }
-            hexaString.append(hexStr);
-            binary.setLength(0);
-        }
+        throw new DecodingException("Can't decode key "+decimal+ " for CHOICE field");
     }
 }
 

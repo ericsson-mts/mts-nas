@@ -6,9 +6,6 @@ import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
-import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
-import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
-import com.ericsson.mts.nas.message.InformationElementsContainer;
 import com.ericsson.mts.nas.reader.Reader;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
@@ -19,7 +16,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
 
-import static com.ericsson.mts.nas.writer.XMLFormatWriter.bytesToHex;
+import static com.ericsson.mts.nas.reader.Reader.encodeFields;
+import static com.ericsson.mts.nas.reader.XMLFormatReader.binaryToHex;
 
 public class MultipleField extends AbstractField {
 
@@ -51,7 +49,7 @@ public class MultipleField extends AbstractField {
             int result = bitInputStream.bigReadBits(nBit).intValueExact();
             formatWriter.intValue("LengthObject", BigInteger.valueOf(result));
 
-            BitInputStream buffer = read(result,bitInputStream);
+            BitInputStream buffer = new BitInputStream(new ByteArrayInputStream(Reader.readByte(result*8,nBit,bitInputStream,logger, formatWriter)));
 
             while(buffer.available() > 0){
                 logger.trace("\n\nEnter in field " + name + (i+1));
@@ -67,61 +65,26 @@ public class MultipleField extends AbstractField {
     }
 
     @Override
-    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
 
         StringBuilder hexaString = new StringBuilder();
         int i = 1;
 
         if(r.exist("LengthObject") != null){
-            binaryToHex(binaryString.append(String.format("%"+nBit+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue("LengthObject")).byteValue() & 0xFF)).replace(' ', '0')),hexaString);
-        }
-        else{
-            binaryToHex(binaryString.append(String.format("%"+((AbstractTranslatorField)pdu.get(0)).length+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue(pdu.get(0).getName())).byteValue() & 0xFF)).replace(' ', '0')),hexaString);
+            binaryToHex(binaryString.append(String.format("%"+nBit+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue("LengthObject")).byteValue() & 0xFF)).replace(' ', '0')),hexaString,nBit);
+        } else{
+            binaryToHex(binaryString.append(String.format("%"+((AbstractTranslatorField)pdu.get(0)).length+"s", Integer.toBinaryString(Integer.valueOf(r.stringValue(pdu.get(0).getName())).byteValue() & 0xFF)).replace(' ', '0')),hexaString, ((AbstractTranslatorField)pdu.get(0)).length);
             pdu =  pdu.subList(1, pdu.size());
         }
-
 
         while(r.exist(name + i) != null){
             logger.trace("Enter field {}", name+i);
             r.enterObject(name+i);
-            for(AbstractField abstractField: pdu){
-                if (abstractField instanceof MessageWrapperField || abstractField instanceof  BinaryField ||  abstractField instanceof  ChoiceField || abstractField instanceof HexadecimalField || abstractField instanceof BinaryLengthField) {
-                    hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
-                } else {
-                    binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
-                    binaryToHex(binaryString, hexaString);
-                }
-            }
+            encodeFields(pdu,mainRegistry,r,binaryString,hexaString);
             r.leaveObject(name+i);
             i++;
         }
 
         return hexaString.toString();
-    }
-
-    private BitInputStream read(int len, BitInputStream s) throws IOException {
-
-        len = len*8;
-        byte[] buffer = Reader.readByte(len,s,logger);
-
-        logger.trace("return buffer 0x{}", bytesToHex(buffer));
-        return new BitInputStream(new ByteArrayInputStream(buffer));
-    }
-
-    private void binaryToHex(StringBuilder binary, StringBuilder hexaString) {
-
-        if (binary.length() >= 8) {
-            int res = Integer.parseInt(binary.toString(), 2);
-            String hexStr = Integer.toString(res, 16);
-            if (hexStr.length() == 1) {
-                if(binary.length() == 16){
-                    hexaString.append("000");
-                }else{
-                    hexaString.append("0");
-                }
-            }
-            hexaString.append(hexStr);
-            binary.setLength(0);
-        }
     }
 }

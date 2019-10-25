@@ -27,5 +27,5 @@ public abstract class AbstractInformationElement {
     public List<AbstractField> pdu;
 
     public abstract int decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException;
-    public abstract void encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString, StringBuilder hexaString);
+    public abstract void encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString, StringBuilder hexaString) throws DecodingException;
 }

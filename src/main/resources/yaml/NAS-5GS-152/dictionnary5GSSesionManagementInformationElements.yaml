@@ -142,7 +142,7 @@ elements:
                         length: 1
                         namedValue:
                           0: "the QoS rule is not the default QoS rule"
-                          1: "the QoS rule is the default QoS rule."
+                          1: "the QoS rule is the default QoS rule"
                       - "@type": "MULTI"
                         name: "Packet filter"
                         contentLength: "Number"

@@ -5,16 +5,12 @@ import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
-import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
-import com.ericsson.mts.nas.informationelement.field.translator.*;
-import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
-import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 
 import java.io.IOException;
-
+import static com.ericsson.mts.nas.reader.Reader.encodeFields;
 
 public class InformationElement extends AbstractInformationElement {
 
@@ -33,26 +29,10 @@ public class InformationElement extends AbstractInformationElement {
     }
 
     @Override
-    public void encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString, StringBuilder hexaString) {
+    public void encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString, StringBuilder hexaString) throws DecodingException {
 
         r.enterObject(name);
-        for (AbstractField abstractField : pdu) {
-                if (abstractField instanceof MessageWrapperField || abstractField instanceof BinaryField || abstractField instanceof ChoiceField || abstractField instanceof HexadecimalField || abstractField instanceof MultipleField) {
-                    hexaString.append(abstractField.encode(mainRegistry, r, binaryString));
-                } else {
-                    binaryString.append(abstractField.encode(mainRegistry, r, binaryString));
-                    if(!binaryString.toString().equals("")) {
-                        if (binaryString.length() % 8 == 0) {
-                            if((((AbstractTranslatorField)abstractField).length)%8 == 0){
-                                hexaString.append(String.format("%0"+(((AbstractTranslatorField)abstractField).length/4)+"X", Long.parseLong(binaryString.toString(),2)));
-                            }else{
-                                hexaString.append(String.format("%02X", Long.parseLong(binaryString.toString(),2)));
-                            }
-                            binaryString.setLength(0);
-                        }
-                    }
-                }
-        }
+        encodeFields(pdu,mainRegistry,r,binaryString,hexaString);
         r.leaveObject(name);
     }
 }

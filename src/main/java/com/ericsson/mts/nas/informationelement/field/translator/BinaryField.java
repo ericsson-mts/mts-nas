@@ -18,20 +18,9 @@ public class BinaryField extends AbstractTranslatorField {
     @Override
     public int decode(Registry mainRegistry,  BitInputStream s, FormatWriter formatWriter) throws IOException, DecodingException {
         logger.trace("Enter field {} with length {}", name, length);
-        byte[] buffer;
-        int len;
-        if (null != length && -1 != length) {
-            len = length;
-        } else if(null == length){
-            len = s.bigReadBits(nBitLength).intValueExact() *8;
-            formatWriter.intValue("Length", BigInteger.valueOf(len/8));
-        } else {
-            len = s.available();
-        }
-
-        buffer = Reader.readByte(len,s,logger);
+        byte[] buffer = Reader.readByte(length,nBitLength,s,logger,formatWriter);
         formatWriter.bytesValue(name,buffer );
-        logger.trace("return buffer 0x{}", bytesToHex(buffer));
+
         return 0;
     }
 

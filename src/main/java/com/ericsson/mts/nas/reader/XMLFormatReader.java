@@ -10,6 +10,7 @@
 
 package com.ericsson.mts.nas.reader;
 
+import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -240,5 +241,17 @@ public class XMLFormatReader implements FormatReader {
             }
         }
         return null;
+    }
+    public static void binaryToHex(StringBuilder binaryString, StringBuilder hexaString, Integer length){
+
+        if(binaryString.length()%8 ==0){
+            if(length%8 == 0){
+                hexaString.append(String.format("%0"+(length/4)+"X", Long.parseLong(binaryString.toString(),2)));
+                binaryString.setLength(0);
+            }else{
+                hexaString.append(String.format("%02X", Long.parseLong(binaryString.toString(),2)));
+            }
+            binaryString.setLength(0);
+        }
     }
 }

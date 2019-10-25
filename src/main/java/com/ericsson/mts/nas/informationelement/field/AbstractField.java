@@ -28,10 +28,7 @@ import java.io.IOException;
         @JsonSubTypes.Type(value = HexadecimalField.class, name = "HEXA"),
         @JsonSubTypes.Type(value = BinaryField.class, name = "BIN"),
         @JsonSubTypes.Type(value = MultipleField.class, name = "MULTI"),
-        @JsonSubTypes.Type(value = BinaryLengthField.class, name = "BINLENGTH"),
-        @JsonSubTypes.Type(value = TextField.class, name = "TEXT"),
-
-
+        @JsonSubTypes.Type(value = BinaryLengthField.class, name = "BINLENGTH")
 })
 public abstract class AbstractField {
     protected String name;
@@ -46,5 +43,5 @@ public abstract class AbstractField {
     }
 
     public abstract int decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException;
-    public abstract String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString);
+    public abstract String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException;
 }

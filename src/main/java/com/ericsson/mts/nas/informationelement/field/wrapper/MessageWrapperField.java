@@ -10,7 +10,8 @@ import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 
 import java.io.IOException;
-import java.util.List;
+
+import static com.ericsson.mts.nas.reader.XMLFormatReader.binaryToHex;
 
 public class MessageWrapperField extends AbstractTranslatorField {
 
@@ -33,7 +34,7 @@ public class MessageWrapperField extends AbstractTranslatorField {
     }
 
     @Override
-    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
 
         StringBuilder hexaField = new StringBuilder();
         byte[] byteArray = new byte[0];
@@ -45,13 +46,13 @@ public class MessageWrapperField extends AbstractTranslatorField {
         for (Integer key : namedValue.keySet()) {
             if (value.equals(namedValue.get(key))) {
                 logger.trace("Encode message {} (0x{})", namedValue.get(key), String.format("%x", key));
-                if(this.length < 8){
-                    binaryString.append(String.format("%"+length+"s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0'));
-                    binaryToHex(binaryString, hexaField);
-                }else{
+                if (this.length < 8) {
+                    binaryString.append(String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0'));
+                    binaryToHex(binaryString, hexaField, length);
+                } else {
                     hexaField.append(Integer.toHexString(key));
                 }
-                if(null != mainRegistry.getMessage(namedValue.get(key))) {
+                if (null != mainRegistry.getMessage(namedValue.get(key))) {
                     r.enterObject(namedValue.get(key));
                     byteArray = mainRegistry.getMessage(namedValue.get(key)).encode(mainRegistry, r, binaryString);
                     r.leaveObject(namedValue.get(key));
@@ -61,7 +62,7 @@ public class MessageWrapperField extends AbstractTranslatorField {
                 return hexaField.toString();
             }
         }
-        return "";
+        throw new DecodingException("Unknow key for value : "+ value);
     }
 
     private static String bytesToHex(byte[] bytes) {
@@ -73,18 +74,5 @@ public class MessageWrapperField extends AbstractTranslatorField {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
-    }
-
-    private void binaryToHex(StringBuilder binary, StringBuilder hexaString){
-
-        if (binary.length() == 8) {
-            int res = Integer.parseInt(binary.toString(), 2);
-            String hexStr = Integer.toString(res, 16);
-            if (hexStr.length() == 1) {
-                hexaString.append("0");
-            }
-            hexaString.append(hexStr);
-            binary.setLength(0);
-        }
     }
 }

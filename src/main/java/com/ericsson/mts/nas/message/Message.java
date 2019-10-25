@@ -5,6 +5,7 @@ import com.ericsson.mts.nas.BitInputStream;
 import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
+import com.ericsson.mts.nas.reader.Reader;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
@@ -45,7 +46,7 @@ public class Message extends AbstractMessage {
     }
 
     @Override
-    public byte[] encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+    public byte[] encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
 
         StringBuilder hexaString = new StringBuilder();
 
@@ -94,7 +95,7 @@ public class Message extends AbstractMessage {
     }
 
     @Override
-    public byte[] encode(Registry mainRegistry, XMLFormatReader r){
+    public byte[] encode(Registry mainRegistry, XMLFormatReader r) throws DecodingException {
         StringBuilder binaryString = new StringBuilder();
         return encode(mainRegistry,r,binaryString);
     }
@@ -106,6 +107,7 @@ public class Message extends AbstractMessage {
             w.leaveObject(c.name());
         } else {
             logger.error("Impossible de trouver l'élement {}", c.type);
+            throw new DecodingException("Can't find element "+ c.type);
         }
     }
 
@@ -135,36 +137,18 @@ public class Message extends AbstractMessage {
                 w.leaveObject(optional.get(iei).name());
             } else {
                 logger.error("Unknown IEI " + iei);
+                throw new DecodingException("Unknown IEI " + iei);
             }
         }
     }
 
     private BitInputStream read(InformationElementsContainer c, BitInputStream s, FormatWriter w) throws IOException {
         byte[] buffer;
-        int len;
 
-        if (null != c.length && -1 != c.length) {
-            len = c.length;
-        } else if (null == c.length) {
-            len = s.bigReadBits(c.nBitLength).intValueExact() *8;
-            w.intValue("Length", BigInteger.valueOf(len/8));
-        } else {
+        if(null == c.length || -1 != c.length){
+            buffer = Reader.readByte(c.length, c.nBitLength, s, logger,w);
+        }else{
             return s;
-        }
-        logger.trace("reading {} bits", len);
-        buffer = new byte[len / 8 + ((len % 8) > 0 ? 1 : 0)];
-        int offset = 7;
-        int index = 0;
-        while (len > 0) {
-            byte bitValue = (byte) s.readBit();
-
-            buffer[index] = (byte) (buffer[index] | (bitValue << offset));
-            offset--;
-            if (-1 == offset) {
-                index++;
-                offset = 7;
-            }
-            len--;
         }
         logger.trace("return buffer 0x{}", bytesToHex(buffer));
         return new BitInputStream(new ByteArrayInputStream(buffer));

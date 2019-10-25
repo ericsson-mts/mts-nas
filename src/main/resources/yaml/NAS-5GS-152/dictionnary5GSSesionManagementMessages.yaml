@@ -69,11 +69,6 @@ messages :
       - type: "5GSM cause"
         length: 8
 
-#  - name: "PDU session release request"
-#    mandatory:
-#      - type: "5GSM cause"
-#        length: 8
-
 
 
 
