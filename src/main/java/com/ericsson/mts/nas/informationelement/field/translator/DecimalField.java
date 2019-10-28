@@ -1,6 +1,7 @@
 package com.ericsson.mts.nas.informationelement.field.translator;
 
 import com.ericsson.mts.nas.BitInputStream;
+import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
@@ -42,15 +43,18 @@ public class DecimalField extends AbstractTranslatorField {
     }
 
     @Override
-    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) {
+    public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
 
-        String value = r.stringValue(name);
+        if(r.exist(name) != null) {
+            String value = r.stringValue(name);
 
-        for (Integer key : namedValue.keySet()) {
-            if (value.equals(namedValue.get(key))){
-                logger.trace("key : {} to byte value {}",key,key.byteValue());
-                return String.format("%"+length+"s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0');
+            for (Integer key : namedValue.keySet()) {
+                if (value.equals(namedValue.get(key))) {
+                    logger.trace("key : {} to byte value {}", key, key.byteValue());
+                    return String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0');
+                }
             }
+        throw new DecodingException("Can't find key for the value "+ value);
         }
         return "";
     }
