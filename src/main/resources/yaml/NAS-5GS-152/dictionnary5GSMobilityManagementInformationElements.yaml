@@ -587,7 +587,6 @@ elements:
                   2: "SST and mapped HPLMN SST"
                   4: "SST and SD"
                   5: "SST, SD and mapped HPLMN SST"
-                  7: "SST"
                   8: "SST, SD, mapped HPLMN SST and mapped HPLMN SD"
               pdus:
                 - keys:
@@ -653,8 +652,8 @@ elements:
       - name : "Re-registration required"
         length: 1
         namedValue:
-          1: "re-registration not required"
-          2: "re-registration required"
+          0: "re-registration not required"
+          1: "re-registration required"
       - name: "Access type"
         length : 2
         namedValue:
@@ -926,6 +925,74 @@ elements:
           0: "PDU session was not requested in the Uplink data"
           1: "PDU session was requested in the Uplink data"
 
+  - name: "Service area list"
+    pdu:
+      - "@type": "MULTI"
+        name: "Partial service area list"
+        contentLength: "Length"
+        pdu:
+          - name: "Allowed type"
+            length: 1
+            namedValue:
+              0: "TAIs in the list are in the allowed area"
+              1: "TAIs in the list are in the non-allowed area"
+          - "@type": "CHOICE"
+            name: "Type of list"
+            field:
+              name: "Type of list value"
+              length: 2
+              namedValue:
+                  0: "list of TACs belonging to one PLMN, with non-consecutive TAC values"
+                  1: "list of TACs belonging to one PLMN, with consecutive TAC values"
+                  2: "list of TAIs belonging to different PLMNs"
+                  3: "All TAIs belonging to the PLMNs in the registration area are in the allowed area"
+            pdus:
+              - keys:
+                  - 0
+                  - 1
+                  - 2
+                  - 3
+                pdu:
+                  - "@type": "DIGITS"
+                    name: "Number of elements"
+                    length: 5
+                  - "@type": "DIGITS"
+                    name: "MCC digit 2"
+                    length: 4
+                  - "@type": "DIGITS"
+                    name: "MCC digit 1"
+                    length: 4
+                  - "@type": "DIGITS"
+                    name: "MNC digit 3"
+                    length: 4
+                  - "@type": "DIGITS"
+                    name: "MCC digit 3"
+                    length: 4
+                  - "@type": "DIGITS"
+                    name: "MNC digit 2"
+                    length: 4
+                  - "@type": "DIGITS"
+                    name: "MNC digit 1"
+                    length: 4
+                  - "@type": BIN
+                    name: "TAC"
+                    length: -1
 
+  - name: "GPRS timer 3"
+    pdu:
+      - name: "Unit"
+        length: 3
+        namedValue:
+          0: "value is incremented in multiples of 10 minutes"
+          1: "value is incremented in multiples of 1 hour"
+          2: "value is incremented in multiples of 10 hours"
+          3: "value is incremented in multiples of 2 seconds"
+          4: "value is incremented in multiples of 30 seconds"
+          5: "value is incremented in multiples of 1 minute"
+          6: "value is incremented in multiples of 320 hours"
+          7: "value indicates that the timer is deactivated"
+      - "@type": "DIGITS"
+        name: "Timer value"
+        length: 5
 
 

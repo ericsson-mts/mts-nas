@@ -19,6 +19,14 @@ messages:
         name: "Sequence number"
         length: 8
 
+  - name: "Integrity protected and ciphered with new 5G NAS security context"
+    mandatory:
+      - type: "Message authentication code"
+        length: 32
+      - type: "Sequence number"
+        name: "Sequence number"
+        length: 8
+
   - name : "Integrity protected"
     mandatory:
       - type: "Message authentication code"
@@ -140,14 +148,29 @@ messages:
         type: "NSSAI"
         name: "Allowed NSSAI"
         length: -1
+      11:
+        type: "NSSAI"
+        name: "Rejected NSSAI"
+        length: -1
+      31:
+        type: "NSSAI"
+        name: "Configured NSSAI"
+        length: -1
+      27:
+        type: "Service area list"
+        length: -1
+      5E:
+        type: "GPRS timer 3"
+        name: "T3512 value"
 
   - name: "Deregistration request"
     mandatory:
-      - type: "Spare half octet 3"
+      - type: "NAS key set identifier"
         length: 4
       - type: "deregistration type"
         length: 4
       - type: "5GS mobile identity"
+        nBitLength: 16
 
   - name: "Service request"
     mandatory:

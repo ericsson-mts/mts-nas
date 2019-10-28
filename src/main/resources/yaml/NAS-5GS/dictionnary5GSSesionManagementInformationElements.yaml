@@ -374,7 +374,11 @@ elements:
                 length: 8
               - "@type": "BIN"
                 name: "Parameter contents"
-
+  - name: "message"
+    pdu:
+      - "@type": BIN
+        name: "content"
+        length: -1
 
 
 

@@ -19,6 +19,7 @@ messages :
         length: 4
       22:
         type: "S-NSSAI"
+        length: -1
       25:
         type: "DNN"
         length: -1
@@ -46,6 +47,15 @@ messages :
     mandatory:
       - type: "Integrity protection maximum data rate"
         length: 16
+    optional:
+      9:
+        type: "PDU session type"
+        length: 4
+      A:
+        type: "SSC mode"
+        length: 4
+      28:
+        type: "5GSM capability"
 
   - name: "PDU session establishment accept"
     mandatory:
@@ -60,6 +70,15 @@ messages :
     optional:
         29:
           type: "PDU address"
+        22:
+          type: "S-NSSAI"
+          length: -1
+        78:
+          type: "EAP message"
+        79:
+          type: "QoS flow descriptions"
+          name: "Authorized QoS flow descriptions"
+          length: -1
         25:
           type: "DNN"
           length: -1

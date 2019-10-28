@@ -58,5 +58,8 @@ messages :
           type: "QoS flow descriptions"
           name: "Authorized QoS flow descriptions"
           length: -1
+        70:
+          type: "message"
+          length: -1
 
 
