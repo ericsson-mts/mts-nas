@@ -42,6 +42,9 @@ messages :
         58:
           type: "5GSM cause"
           length: 8
+        37:
+          type: "GPRS timer 3"
+          name: "Back-off timer value"
 
   - name: "PDU session establishment request"
     mandatory:
@@ -68,6 +71,9 @@ messages :
         length: -1
       - type: "Session-AMBR"
     optional:
+        58:
+          type: "5GSM cause"
+          length: 8
         29:
           type: "PDU address"
         22:
@@ -87,7 +93,12 @@ messages :
     mandatory:
       - type: "5GSM cause"
         length: 8
-
+    optional:
+      37:
+        type: "GPRS timer 3"
+        name: "Back-off timer value"
+      78:
+        type: "EAP message"
 
 
 

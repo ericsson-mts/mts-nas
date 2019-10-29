@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Map;
 
-import static com.ericsson.mts.nas.writer.XMLFormatWriter.bytesToHex;
-
 public class Message extends AbstractMessage {
 
     public void decode(Registry mainRegistry, BitInputStream s, FormatWriter w) throws IOException, DecodingException, DictionaryException, NotHandledException {
@@ -150,7 +148,6 @@ public class Message extends AbstractMessage {
         }else{
             return s;
         }
-        logger.trace("return buffer 0x{}", bytesToHex(buffer));
         return new BitInputStream(new ByteArrayInputStream(buffer));
     }
 }

@@ -64,9 +64,22 @@ messages:
              type: "5GS tracking area identity"
              name: "Last visited registered TAI"
              length: 48
+         40:
+           type: "Uplink data status"
+         50:
+           type: "PDU session status"
+         77:
+           type: "5GS mobile identity"
+           name: "Additional GUTI"
+           nBitLength: 16
+         25:
+           type: "Allowed PDU session status"
          70:
              type: "EPS NAS message container"
              length: -1
+         71:
+           type: "NAS message container"
+           nBitLength: 16
 
   - name: "Authentication request"
     mandatory:
@@ -156,12 +169,18 @@ messages:
         type: "NSSAI"
         name: "Configured NSSAI"
         length: -1
+      50:
+        type: "PDU session status"
+      26:
+        type: "PDU session reactivation result"
       27:
         type: "Service area list"
         length: -1
       5E:
         type: "GPRS timer 3"
         name: "T3512 value"
+      78:
+        type: "EAP message"
 
   - name: "Deregistration request"
     mandatory:
@@ -186,6 +205,8 @@ messages:
         type: "Uplink data status"
       50:
         type: "PDU session status"
+      25:
+        type: "Allowed PDU session status"
       71:
         type: "NAS message container"
         nBitLength: 16
@@ -196,6 +217,8 @@ messages:
         type: "PDU session status"
       26:
         type: "PDU session reactivation result"
+      78:
+        type: "EAP message"
 
 
 

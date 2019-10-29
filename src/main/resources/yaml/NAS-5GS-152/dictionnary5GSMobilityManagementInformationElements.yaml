@@ -925,6 +925,89 @@ elements:
           0: "PDU session was not requested in the Uplink data"
           1: "PDU session was requested in the Uplink data"
 
+  - name: "Allowed PDU session status"
+    pdu:
+      - name: "PSI7"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI6"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI5"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI4"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI3"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI2"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI1"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI0"
+        length: 1
+        namedValue:
+          0: "Spare"
+      - name: "PSI15"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI714"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI13"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI12"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI11"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI10"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI9"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+      - name: "PSI8"
+        length: 1
+        namedValue:
+          0: "indicates that the user-plane resources of corresponding PDU session is not allowed to be re-established over 3GPP access"
+          1: "indicates that the user-plane resources of corresponding PDU session can be re-established over 3GPP access"
+
+
   - name: "Service area list"
     pdu:
       - "@type": "MULTI"
