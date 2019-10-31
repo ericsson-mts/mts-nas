@@ -6,10 +6,7 @@ import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
-import com.ericsson.mts.nas.writer.XMLFormatWriter;
 
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.math.BigInteger;
 

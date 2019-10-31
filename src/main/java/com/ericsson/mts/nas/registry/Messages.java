@@ -1,7 +1,6 @@
 package com.ericsson.mts.nas.registry;
 
 import com.ericsson.mts.nas.message.AbstractMessage;
-import com.ericsson.mts.nas.message.Message;
 
 import java.util.List;
 

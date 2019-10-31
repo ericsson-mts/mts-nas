@@ -6,8 +6,6 @@ import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
-import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
-import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
 import com.ericsson.mts.nas.reader.Reader;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
@@ -16,11 +14,8 @@ import com.ericsson.mts.nas.writer.FormatWriter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.util.List;
 
 import static com.ericsson.mts.nas.reader.Reader.encodeFields;
-import static com.ericsson.mts.nas.reader.XMLFormatReader.binaryToHex;
-import static com.ericsson.mts.nas.writer.XMLFormatWriter.bytesToHex;
 
 public class BinaryLengthField extends AbstractTranslatorField {
 

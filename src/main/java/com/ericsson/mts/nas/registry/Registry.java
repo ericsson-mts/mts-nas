@@ -4,14 +4,12 @@ import com.ericsson.mts.nas.informationelement.AbstractInformationElement;
 import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.informationelement.field.FieldMapContainer;
-import com.ericsson.mts.nas.informationelement.field.translator.BinaryLengthField;
-import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.informationelement.field.translator.MultipleField;
+import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.message.AbstractMessage;
 import com.ericsson.mts.nas.message.InformationElementsContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.google.common.collect.HashBiMap;
 
 import java.io.IOException;
 import java.io.InputStream;

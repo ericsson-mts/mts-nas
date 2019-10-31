@@ -5,7 +5,6 @@ import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
-import com.ericsson.mts.nas.registry.InformationElements;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

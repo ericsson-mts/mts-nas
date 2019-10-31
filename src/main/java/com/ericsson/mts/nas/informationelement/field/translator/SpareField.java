@@ -2,14 +2,12 @@ package com.ericsson.mts.nas.informationelement.field.translator;
 
 import com.ericsson.mts.nas.BitInputStream;
 import com.ericsson.mts.nas.exceptions.DecodingException;
-import com.ericsson.mts.nas.informationelement.field.AbstractField;
 import com.ericsson.mts.nas.informationelement.field.AbstractTranslatorField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 
 import java.io.IOException;
-import java.util.List;
 
 public class SpareField extends AbstractTranslatorField {
     private int value;

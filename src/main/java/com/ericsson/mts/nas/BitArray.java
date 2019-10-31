@@ -10,7 +10,6 @@
 
 package com.ericsson.mts.nas;
 
-import com.ericsson.mts.nas.writer.FormatWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

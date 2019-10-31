@@ -1,7 +1,6 @@
 package com.ericsson.mts.nas.registry;
 
 import com.ericsson.mts.nas.informationelement.AbstractInformationElement;
-import com.ericsson.mts.nas.informationelement.InformationElement;
 
 import java.util.List;
 

@@ -1,11 +1,11 @@
 package com.ericsson.mts.nas.informationelement.field;
 
 
-import com.ericsson.mts.nas.informationelement.field.translator.*;
 import com.ericsson.mts.nas.BitInputStream;
 import com.ericsson.mts.nas.exceptions.DecodingException;
 import com.ericsson.mts.nas.exceptions.DictionaryException;
 import com.ericsson.mts.nas.exceptions.NotHandledException;
+import com.ericsson.mts.nas.informationelement.field.translator.*;
 import com.ericsson.mts.nas.informationelement.field.wrapper.ChoiceField;
 import com.ericsson.mts.nas.informationelement.field.wrapper.MessageWrapperField;
 import com.ericsson.mts.nas.reader.XMLFormatReader;

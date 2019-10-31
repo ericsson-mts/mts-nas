@@ -10,6 +10,7 @@ import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 
 import java.io.IOException;
+
 import static com.ericsson.mts.nas.reader.Reader.encodeFields;
 
 public class InformationElement extends AbstractInformationElement {

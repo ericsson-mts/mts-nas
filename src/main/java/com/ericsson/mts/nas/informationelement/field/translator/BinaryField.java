@@ -9,9 +9,6 @@ import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
 
 import java.io.IOException;
-import java.math.BigInteger;
-
-import static com.ericsson.mts.nas.writer.XMLFormatWriter.bytesToHex;
 
 public class BinaryField extends AbstractTranslatorField {
 
