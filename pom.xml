@@ -77,6 +77,11 @@
             <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>21.0</version>
+        </dependency>
     </dependencies>
     
     <profiles>
