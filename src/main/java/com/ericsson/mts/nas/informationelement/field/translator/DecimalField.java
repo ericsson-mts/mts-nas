@@ -26,12 +26,11 @@ public class DecimalField extends AbstractTranslatorField {
         if (length > 0) {
             int result = bitInputStream.bigReadBits(length).intValueExact();
             if (namedValueMap != null) {
-                for (Integer value : namedValueMap.keySet()) {
-                    if (value == result) {
-                        logger.trace("{}  result : {} (0x{})", name, namedValueMap.get(value), String.format("%x", value));
-                        formatWriter.stringValue(name, namedValueMap.get(value));
-                        return result;
-                    }
+                String value = namedValueMap.get(result);
+                if (!value.isEmpty()) {
+                    logger.trace("{}  result : {} (0x{})", name, value, String.format("%x", result));
+                    formatWriter.stringValue(name, value);
+                    return result;
                 }
             }
             logger.trace("{}  result : (0x{})", name, String.format("%x", result));
@@ -45,16 +44,16 @@ public class DecimalField extends AbstractTranslatorField {
     @Override
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
 
-        if(r.exist(name) != null) {
+        if (r.exist(name) != null) {
             String value = r.stringValue(name);
 
-            for (Integer key : namedValueMap.keySet()) {
-                if (value.equals(namedValueMap.get(key))) {
-                    logger.trace("key : {} to byte value {}", key, key.byteValue());
-                    return String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0');
-                }
+            Integer key = namedValueMap.inverse().get(value);
+            if (null != key) {
+                logger.trace("key : {} to byte value {}", key, key.byteValue());
+                return String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0');
             }
-        throw new DecodingException("Can't find key for the value "+ value);
+
+            throw new DecodingException("Can't find key for the value " + value);
         }
         return "";
     }
