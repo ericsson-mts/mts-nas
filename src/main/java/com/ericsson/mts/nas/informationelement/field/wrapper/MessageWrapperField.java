@@ -20,15 +20,14 @@ public class MessageWrapperField extends AbstractTranslatorField {
     public int decode(Registry mainRegistry, BitInputStream bitInputStream, FormatWriter formatWriter) throws IOException, DecodingException, DictionaryException, NotHandledException {
         logger.trace("Enter field {}", name);
         int result = bitInputStream.readBits(length);
-        for(Integer key : namedValue.keySet()){
-            if(key == result){
-                logger.trace("Decode message {} (0x{})", namedValue.get(key), String.format("%x", key));
-                formatWriter.stringValue(name, namedValue.get(key));
-                if(null != mainRegistry.getMessage(namedValue.get(key))){
-                    mainRegistry.getMessage(namedValue.get(key)).decode(mainRegistry, bitInputStream, formatWriter);
-                }
-                return result;
+        if(namedValueMap.containsKey(result)) {
+            String message = namedValueMap.get(result);
+            logger.trace("Decode message {} (0x{})", message, String.format("%x", result));
+            formatWriter.stringValue(name, message);
+            if (null != mainRegistry.getMessage(message)) {
+                mainRegistry.getMessage(message).decode(mainRegistry, bitInputStream, formatWriter);
             }
+            return result;
         }
         throw new DecodingException(name + " can't decode " + result);
     }
@@ -37,31 +36,32 @@ public class MessageWrapperField extends AbstractTranslatorField {
     public String encode(Registry mainRegistry, XMLFormatReader r, StringBuilder binaryString) throws DecodingException {
 
         StringBuilder hexaField = new StringBuilder();
-        byte[] byteArray = new byte[0];
+        byte[] byteArray;
 
         r.enterObject(this.name);
         String value = r.stringValue(this.name);
         r.leaveObject(this.name);
 
-        for (Integer key : namedValue.keySet()) {
-            if (value.equals(namedValue.get(key))) {
-                logger.trace("Encode message {} (0x{})", namedValue.get(key), String.format("%x", key));
-                if (this.length < 8) {
-                    binaryString.append(String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0'));
-                    binaryToHex(binaryString, hexaField, length);
-                } else {
-                    hexaField.append(Integer.toHexString(key));
-                }
-                if (null != mainRegistry.getMessage(namedValue.get(key))) {
-                    r.enterObject(namedValue.get(key));
-                    byteArray = mainRegistry.getMessage(namedValue.get(key)).encode(mainRegistry, r, binaryString);
-                    r.leaveObject(namedValue.get(key));
-
-                    hexaField.append(bytesToHex(byteArray));
-                }
-                return hexaField.toString();
+        Integer key = namedValueMap.inverse().get(value);
+        if(null !=  key) {
+            String element = namedValueMap.get(key);
+            logger.trace("Encode message {} (0x{})", element, String.format("%x", key));
+            if (this.length < 8) {
+                binaryString.append(String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0'));
+                binaryToHex(binaryString, hexaField, length);
+            } else {
+                hexaField.append(Integer.toHexString(key));
             }
+            if (null != mainRegistry.getMessage(element)) {
+                r.enterObject(element);
+                byteArray = mainRegistry.getMessage(element).encode(mainRegistry, r, binaryString);
+                r.leaveObject(element);
+
+                hexaField.append(bytesToHex(byteArray));
+            }
+            return hexaField.toString();
         }
+
         throw new DecodingException("Unknow key for value : "+ value);
     }
 

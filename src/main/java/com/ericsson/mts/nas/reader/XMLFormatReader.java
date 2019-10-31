@@ -37,6 +37,8 @@ public class XMLFormatReader implements FormatReader {
     private Element currentNode;
     private Stack<Element> arrayStack = new Stack<Element>();
 
+    private boolean elementExist = true;
+
     public XMLFormatReader(Element rootNode, String type) {
         currentNode = rootNode;
         ignoredObject = type;
@@ -59,8 +61,10 @@ public class XMLFormatReader implements FormatReader {
 
     public void enterObject(String name) {
         if (!ignoredObject.equals(name)) {
+            elementExist = true;
             if (name != null) {
                 logger.trace("Enter object {}", name);
+
                 currentNode = getChildNode(getFromStack(currentNode), name);
             } else {
                 if (!currentNode.getAttribute(IS_ARRAY).equals("")) {
@@ -187,9 +191,9 @@ public class XMLFormatReader implements FormatReader {
         } catch (TransformerException e) {
             e.printStackTrace();
         }
-        String xmlString = result.getWriter().toString();
-        System.out.println(xmlString);
-        System.out.println("--------------------------------------------------------------------------------------------");
+//        String xmlString = result.getWriter().toString();
+//        System.out.println(xmlString);
+//        System.out.println("--------------------------------------------------------------------------------------------");
     }
     public String stringValue(String name) {
         if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -211,6 +215,7 @@ public class XMLFormatReader implements FormatReader {
                 return (Element) current;
             }
         }
+        elementExist = false;
         return node;
     }
 
@@ -234,6 +239,7 @@ public class XMLFormatReader implements FormatReader {
         Element node = getFromStack(currentNode);
 
         NodeList nodeList = node.getChildNodes();
+
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node current = nodeList.item(i);
             if (current.getNodeName().equals(name)) {
@@ -253,5 +259,9 @@ public class XMLFormatReader implements FormatReader {
             }
             binaryString.setLength(0);
         }
+    }
+
+    public boolean isElementExist() {
+        return elementExist;
     }
 }

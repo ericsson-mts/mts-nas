@@ -92,7 +92,7 @@ messages:
         type: "5GS mobile identity"
         name: "5G-GUTI"
 
-  - name: "Deregistration request"
+  - name: "Deregistration request UE originating"
     mandatory:
       - type: "Spare half octet 3"
         length: 4

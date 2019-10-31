@@ -25,11 +25,11 @@ public class DecimalField extends AbstractTranslatorField {
 
         if (length > 0) {
             int result = bitInputStream.bigReadBits(length).intValueExact();
-            if (namedValue != null) {
-                for (Integer value : namedValue.keySet()) {
+            if (namedValueMap != null) {
+                for (Integer value : namedValueMap.keySet()) {
                     if (value == result) {
-                        logger.trace("{}  result : {} (0x{})", name, namedValue.get(value), String.format("%x", value));
-                        formatWriter.stringValue(name, namedValue.get(value));
+                        logger.trace("{}  result : {} (0x{})", name, namedValueMap.get(value), String.format("%x", value));
+                        formatWriter.stringValue(name, namedValueMap.get(value));
                         return result;
                     }
                 }
@@ -48,8 +48,8 @@ public class DecimalField extends AbstractTranslatorField {
         if(r.exist(name) != null) {
             String value = r.stringValue(name);
 
-            for (Integer key : namedValue.keySet()) {
-                if (value.equals(namedValue.get(key))) {
+            for (Integer key : namedValueMap.keySet()) {
+                if (value.equals(namedValueMap.get(key))) {
                     logger.trace("key : {} to byte value {}", key, key.byteValue());
                     return String.format("%" + length + "s", Integer.toBinaryString(key.byteValue() & 0xFF)).replace(' ', '0');
                 }

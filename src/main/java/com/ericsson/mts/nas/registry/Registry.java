@@ -11,6 +11,7 @@ import com.ericsson.mts.nas.message.AbstractMessage;
 import com.ericsson.mts.nas.message.InformationElementsContainer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.collect.HashBiMap;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,10 +31,13 @@ public class Registry {
                     informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.type));
                 }
             }
-            if(null != message.optional){
+            if (null != message.optional) {
                 for (InformationElementsContainer informationElementsContainer : message.optional.values()) {
                     informationElementsContainer.setName(convertToCamelCase(informationElementsContainer.name()));
                     informationElementsContainer.setType(convertToCamelCase(informationElementsContainer.type));
+                }
+                for (String iei : message.optional.keySet()) {
+                    message.optionalMap.put(message.optional.get(iei).name,iei);
                 }
             }
             if(null != message.additionnal) {
@@ -51,6 +55,8 @@ public class Registry {
                 initAbstractField(abstractField);
             }
         }
+
+
     }
 
     private void initAbstractField(AbstractField abstractField){
@@ -61,7 +67,7 @@ public class Registry {
                 for (Integer key : abstractTranslatorField.namedValue.keySet()) {
                     String value = abstractTranslatorField.namedValue.get(key);
                     if (value != null) {
-                        abstractTranslatorField.namedValue.put(key, convertToCamelCase(value));
+                        abstractTranslatorField.namedValueMap.put(key, convertToCamelCase(value));
                     }
                 }
             }
@@ -86,6 +92,7 @@ public class Registry {
                 initAbstractField(abstractField1);
             }
         }
+
     }
 
     public void loadMessages(InputStream inputStream) throws IOException {

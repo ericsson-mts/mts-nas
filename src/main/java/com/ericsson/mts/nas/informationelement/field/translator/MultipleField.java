@@ -77,12 +77,14 @@ public class MultipleField extends AbstractField {
             pdu =  pdu.subList(1, pdu.size());
         }
 
-        while(r.exist(name + i) != null){
+        while(r.isElementExist()){
             logger.trace("Enter field {}", name+i);
             r.enterObject(name+i);
-            encodeFields(pdu,mainRegistry,r,binaryString,hexaString);
-            r.leaveObject(name+i);
-            i++;
+            if(r.isElementExist()) {
+                encodeFields(pdu, mainRegistry, r, binaryString, hexaString);
+                r.leaveObject(name + i);
+                i++;
+            }
         }
 
         return hexaString.toString();

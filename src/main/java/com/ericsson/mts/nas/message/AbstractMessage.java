@@ -8,8 +8,10 @@ import com.ericsson.mts.nas.reader.XMLFormatReader;
 import com.ericsson.mts.nas.registry.InformationElements;
 import com.ericsson.mts.nas.registry.Registry;
 import com.ericsson.mts.nas.writer.FormatWriter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.google.common.collect.HashBiMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,8 @@ public abstract class AbstractMessage {
     public List<InformationElementsContainer> additionnal;
     public List<InformationElementsContainer> mandatory;
     public Map<String, InformationElementsContainer> optional;
+    @JsonIgnore
+    public HashBiMap<String, String> optionalMap = HashBiMap.create(1);
 
     public void setName(String name) {
         this.name = name;
