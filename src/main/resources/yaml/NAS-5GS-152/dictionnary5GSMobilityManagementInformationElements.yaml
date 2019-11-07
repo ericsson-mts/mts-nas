@@ -407,13 +407,22 @@ elements:
   - name: "Authentication parameter RAND"
     pdu:
       - "@type" : BIN
-        name: "AUTN"
+        name: "RAND"
         length: 128
   - name: "Authentication Parameter AUTN"
     pdu:
-      - "@type" : BIN
-        name: "AUTN"
-        length: 136
+      - "@type": "DIGITS"
+        name: "Length"
+        length : 8
+      - "@type": BIN
+        name: "SQN xor AK"
+        length: 48
+      - "@type": BIN
+        name: "AMF"
+        length: 16
+      - "@type": BIN
+        name: "MAC"
+        length: 64
 
   - name: "Authentication response parameter"
     pdu:
