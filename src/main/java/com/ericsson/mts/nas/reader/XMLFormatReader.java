@@ -211,6 +211,7 @@ public class XMLFormatReader implements FormatReader {
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node current = nodeList.item(i);
             if (current.getNodeName().equals(name)) {
+                elementExist = true;
                 return (Element) current;
             }
         }

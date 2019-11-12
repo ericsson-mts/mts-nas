@@ -28,9 +28,9 @@ public class Message extends AbstractMessage {
         }
 
         if(null != optional) {
-            w.enterObject("Optional");
+//            w.enterObject("Optional");
             readOptionnal(mainRegistry, s, w);
-            w.leaveObject("Optional");
+//            w.leaveObject("Optional");
         }
 
         if (null != additionnal && s.available() > 0) {
@@ -61,8 +61,8 @@ public class Message extends AbstractMessage {
         }
 
         if(null != optional){
-            r.enterObject("Optional");
-            for (String name : r.fieldsValue()){
+//            r.enterObject("Optional");
+            for (String name : optionalMap.inverse().values()){
                 r.enterObject(name);
                 if(r.isElementExist()){
                     String key = optionalMap.get(name);
@@ -77,7 +77,7 @@ public class Message extends AbstractMessage {
                     r.leaveObject(name);
                 }
             }
-            r.leaveObject("Optional");
+//            r.leaveObject("Optional");
         }
 
         if(null != additionnal) {

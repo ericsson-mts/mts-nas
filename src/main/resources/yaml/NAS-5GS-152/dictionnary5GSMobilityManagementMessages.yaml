@@ -77,6 +77,11 @@ messages:
          70:
              type: "EPS NAS message container"
              length: -1
+         7B:
+           type: "Payload container"
+           nBitLength: 16
+         53:
+           type: "5GS update type"
          71:
            type: "NAS message container"
            nBitLength: 16
