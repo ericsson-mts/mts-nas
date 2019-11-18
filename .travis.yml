@@ -20,6 +20,7 @@ install:
 
 deploy:
   provider: releases
+  api_key: $GITHUB_TOKEN
   skip_cleanup: true
   overwrite: true
   on:
