@@ -24,3 +24,10 @@ script:
 cache:
   directories:
   - "$HOME/.m2/repository"
+  
+ deploy:                                                                                                                    
+  provider: releases          
+  skip_cleanup: true                              
+  overwrite: true 
+  on:
+    branch: master
