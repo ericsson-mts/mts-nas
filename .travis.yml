@@ -17,16 +17,6 @@ install:
   - openssl aes-256-cbc -K $encrypted_b8a72b3bd474_key -iv $encrypted_b8a72b3bd474_iv -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
 
-
-#deploy:
-#  provider: releases
-#  api_key: $GITHUB_TOKEN
-#  skip_cleanup: true
-#  overwrite: true
-#  on:
-#    branch: master
-#    tags: true
-
 script:
 - if [[ ! -z $TRAVIS_TAG ]]; then mvn versions:set -DnewVersion=$TRAVIS_TAG; fi
 - mvn -B -Ptravis --settings .m2/settings.xml clean deploy
