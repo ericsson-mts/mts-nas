@@ -18,13 +18,14 @@ install:
   - tar xvf secrets.tar
 
 
-deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
-  skip_cleanup: true
-  overwrite: true
-  on:
-    branch: master
+#deploy:
+#  provider: releases
+#  api_key: $GITHUB_TOKEN
+#  skip_cleanup: true
+#  overwrite: true
+#  on:
+#    branch: master
+#    tags: true
 
 script:
 - if [[ ! -z $TRAVIS_TAG ]]; then mvn versions:set -DnewVersion=$TRAVIS_TAG; fi
